@@ -1,0 +1,98 @@
+
+<nav class="nav">
+    <p>Calendar app</p>
+    <p style="font-size: 16px; margin-right: 3rem;">Welcome, User</p>
+</nav>
+<div class="input-dates">
+    <button class="bt-add-new" (click)="openModal()">Add new</button>
+</div>
+<div class="calendar-container">
+    <div class="calendar">
+        <div class="month-year">
+            <p id="btn-prev-next" (click)="prevMonth()" style="align-self: last baseline;">&lt;</p>
+            <p style="text-align: center; font-size: 26px; font-weight: bolder;" >{{currentMonth}}, <span>{{currentYear}}</span></p>
+            <p id="btn-prev-next" (click)="nextMonth()" style="align-self: last baseline;">&gt;</p>
+        </div>
+        
+        <table>
+            <thead>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thur</th>
+                <th>Fri</th>
+                <th>Sat</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="today">1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                </tr>
+                <tr >
+                    
+                    <td class="time-off">13</td>
+                    <td class="time-off">14</td>
+                    <td class="time-off">15</td>
+                    <td class="time-off">16</td>
+                    <td class="time-off">17</td>
+                    <td class="time-off">18</td>
+                    <td class="time-off">19</td>
+                </tr>
+                <tr id="special-row" ><td colspan="7" class="time-off" >ross geller</td></tr>
+                <tr>
+                    <td>20</td>
+                    <td>21</td>
+                    <td>22</td>
+                    <td>23</td>
+                    <td>24</td>
+                    <td>25</td>
+                    <td>26</td>
+                </tr>
+                <tr>
+                    <td>27</td>
+                    <td>28</td>
+                    <td>29</td>
+                    <td>30</td>
+                    <td>31</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+<div class="modal" [ngStyle]="{'display': modalVisible ? 'block' : 'none'}">
+    <div class="modal-content">
+            <span class="close" (click)="closeModal()">&times;</span>
+            <h2 >Enter leave dates:</h2>
+      <form (submit)="submitForm()">
+        <div>
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required [(ngModel)]="startDate">
+        </div> 
+       <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required [(ngModel)]="endDate">
+       </div>     
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  
