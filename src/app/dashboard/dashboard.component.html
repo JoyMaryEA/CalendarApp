@@ -1,7 +1,11 @@
 
 <nav class="nav">
     <p>Calendar app</p>
-    <p style="font-size: 16px; margin-right: 3rem;">Welcome, User</p>
+    <div style="height: .5rem; display: flex; align-items: center;">
+        <p style="font-size: 16px; margin-right: 3rem;">Welcome, {{username}}</p>
+        <button class="bt-logout" (click)="logout()">Logout</button>
+    </div>
+   
 </nav>
 <div class="input-dates">
     <button class="bt-add-new" (click)="openModal()">Add new</button>
@@ -25,55 +29,21 @@
                 <th>Sat</th>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td class="today">1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    
+                <tr *ngFor="let row of dates; let i = index">
+                  <td *ngFor="let date of row; let j = index">
+                    <span *ngIf="date === 0"> </span>
+                    <ng-container *ngIf="date !== 0 ">
+                      <div class="dates"
+                        [ngStyle]="{
+                            'background-color': isMatchingMonthAndYear(users[i], date) ? users[i].color : 'transparent'
+                        }"
+                      >
+                        {{ date }}
+                      </div>
+                    </ng-container>
+                  </td>
                 </tr>
-                <tr>
-                    <td>6</td>
-                    <td>7</td>
-                    <td>8</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>11</td>
-                    <td>12</td>
-                </tr>
-                <tr >
-                    
-                    <td class="time-off">13</td>
-                    <td class="time-off">14</td>
-                    <td class="time-off">15</td>
-                    <td class="time-off">16</td>
-                    <td class="time-off">17</td>
-                    <td class="time-off">18</td>
-                    <td class="time-off">19</td>
-                </tr>
-                <tr id="special-row" ><td colspan="7" class="time-off" >ross geller</td></tr>
-                <tr>
-                    <td>20</td>
-                    <td>21</td>
-                    <td>22</td>
-                    <td>23</td>
-                    <td>24</td>
-                    <td>25</td>
-                    <td>26</td>
-                </tr>
-                <tr>
-                    <td>27</td>
-                    <td>28</td>
-                    <td>29</td>
-                    <td>30</td>
-                    <td>31</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
+              </tbody>
         </table>
     </div>
     
@@ -82,14 +52,14 @@
     <div class="modal-content">
             <span class="close" (click)="closeModal()">&times;</span>
             <h2 >Enter leave dates:</h2>
-      <form (submit)="submitForm()">
+      <form (submit)="submitForm()" [formGroup]="myForm" >
         <div>
             <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" required [(ngModel)]="startDate">
+            <input type="date" id="startDate" name="startDate" required formControlName="startDate" >
         </div> 
        <div>
         <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate" required [(ngModel)]="endDate">
+        <input type="date" id="endDate" name="endDate" required formControlName="endDate">
        </div>     
         <button type="submit">Submit</button>
       </form>
