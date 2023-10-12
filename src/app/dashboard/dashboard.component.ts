@@ -8,8 +8,8 @@ import { Router, RouterModule } from '@angular/router';
 
 interface User {
   name: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   color: string;
   userDates: number[]
 }
@@ -31,8 +31,8 @@ export class DashboardComponent implements OnInit{
   currentYear: number = this.currDate.getFullYear()
    username = ''
   users:User[] =[{ name: "joy",
-    startDate: "2023-10-01",
-    endDate: "2023-10-07",
+    startDate: new Date(2023,9,1),
+    endDate:  new Date(2023,9,7),
     color: 'rgb(217, 249, 200)',
     userDates: [1,2,3,4,5,6,7]} ]
     faSignOut=faSignOut
@@ -63,12 +63,16 @@ export class DashboardComponent implements OnInit{
   }
 
   submitForm() {
-   this.users.push({name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), userDates:[]})
+   this.users.push({name:localStorage.getItem("username")!, startDate:this.stringToDate(this.myForm.get('startDate')!.value),endDate:this.stringToDate(this.myForm.get('endDate')!.value),color:this.getRandomLightColor(), userDates:[]})
    console.log(this.users);
    this.staffLeaveDays()
    this.myForm.reset();
   this.closeModal();
 
+  }
+  stringToDate(dateStr:string){
+   let dateArr= dateStr.split("-")
+   return new Date( parseInt(dateArr[0], 10),parseInt(dateArr[1], 10),parseInt(dateArr[2], 10))
   }
 
   nextMonth() {
@@ -166,32 +170,8 @@ export class DashboardComponent implements OnInit{
 
 
       }
-      
-      
-      isMatchingMonthAndYearForAnyUser(users: User[], date: number): { color: string, isMatchingMonth: boolean } {
-        for (const user of users) {
-          if (user.startDate && user.endDate) {
-            const currentDate = new Date(this.currentYear, this.currMon, date);
-            const startDate = new Date(user.startDate);
-            const endDate = new Date(user.endDate);
-            
-            // Check if the current date is within the start and end date range
-            if (currentDate >= startDate && currentDate <= endDate) {
-              const isMatchingMonth = this.months[startDate.getMonth() ] == this.currentMonth;
-              console.log(this.months[startDate.getMonth() ]);
-              console.log(this.currentMonth);
-              
-              console.log(isMatchingMonth);
-              
-              
-              return { color: isMatchingMonth ? user.color : 'transparent', isMatchingMonth };
-            }
-          }
-        }
-        
-        return { color: 'transparent', isMatchingMonth: false };
-      }
-      
-      
-      
+  
+    
+
+       
 }

@@ -33,12 +33,10 @@
                 <td *ngFor="let date of row; let j = index">
                   <span *ngIf="date === 0"> </span>
                   <ng-container *ngIf="date !== 0">
-                    <div class="dates" [ngStyle]="{
-                      'background-color': isMatchingMonthAndYearForAnyUser(users, date) ? isMatchingMonthAndYearForAnyUser(users, date).color : 'transparent'
-                    }">
-                      {{ date }}
+                    <div class="dates"  > 
+                      {{ date }} 
                       <div class="inside-dates" *ngFor="let user of users; let k = index">
-                        <span style="font-size: 10px;" *ngIf="user.userDates.includes(date) && isMatchingMonthAndYearForAnyUser(users, date).isMatchingMonth">
+                        <span style="font-size: 10px;" *ngIf="user.userDates.includes(date) && user.startDate.getMonth()=== currDate.getMonth() ">
                           {{ user.name }}
                         </span>
                       </div>
