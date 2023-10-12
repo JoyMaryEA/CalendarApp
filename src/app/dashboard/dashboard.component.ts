@@ -4,18 +4,19 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { Router, RouterModule } from '@angular/router';
 
 interface User {
   name: string;
   startDate: string;
   endDate: string;
   color: string;
-  dates: number[];
+  userDates: number[]
 }
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -29,17 +30,18 @@ export class DashboardComponent implements OnInit{
   currentMonth: string = this.months[this.currDate.getMonth() ]
   currentYear: number = this.currDate.getFullYear()
    username = ''
-  users:User[] =[ {
-    name: "John Doe",
-    startDate: "2023-10-10",
-    endDate: "2023-10-10",
-    color: "#336699",
-  dates:[10]}]
+  users:User[] =[{ name: "joy",
+    startDate: "2023-10-01",
+    endDate: "2023-10-07",
+    color: 'rgb(217, 249, 200)',
+    userDates: [1,2,3,4,5,6,7]} ]
     faSignOut=faSignOut
 
     dates :number[][]  = []
    myForm:FormGroup
-   
+  monthCheck:string =''
+  yearCheck:string = ''
+
   constructor(private fb: FormBuilder) {
     this.myForm = this.fb.group({
       startDate: [''],
@@ -50,6 +52,8 @@ export class DashboardComponent implements OnInit{
     this.username = localStorage.getItem("username") as string
     this.dates = this.date2calendar({date:this.currDate})
     this.staffLeaveDays()
+    console.log(this.dates);
+    
     }
   closeModal() {
     this.modalVisible = false;
@@ -59,7 +63,7 @@ export class DashboardComponent implements OnInit{
   }
 
   submitForm() {
-   this.users.push({name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), dates:[]})
+   this.users.push({name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), userDates:[]})
    console.log(this.users);
    this.staffLeaveDays()
    this.myForm.reset();
@@ -140,14 +144,15 @@ export class DashboardComponent implements OnInit{
     
       logout(){
         localStorage.clear()
+        
       }
     
       staffLeaveDays(){
         this.users.forEach((user) => {
           const startDate = new Date(user.startDate);
           const endDate = new Date(user.endDate);
-          // Create an array of numbers representing the day of the month
-          user.dates = Array.from(
+        
+          user.userDates = Array.from(
             { length: (endDate.getDate() - startDate.getDate() + 1) },
             (_, index) => {
               const date = new Date(startDate);
@@ -161,26 +166,32 @@ export class DashboardComponent implements OnInit{
 
 
       }
-      isMatchingMonthAndYear(user: User, date: number): boolean {
-        if (user && user.dates && user.startDate && user.endDate) {
-          const currentDate = new Date(this.currentYear, this.currMon, date);
-          const startDate = new Date(user.startDate);
-          const endDate = new Date(user.endDate);
-          
-          
-          return (
-            this.currentYear === startDate.getFullYear() &&
-            this.currMon === startDate.getMonth() 
-            // &&
-            // currentDate >= startDate &&
-            // currentDate <= endDate
-             &&
-            user.dates.includes(date)
-          );
-        }
       
-        return false;
+      
+      isMatchingMonthAndYearForAnyUser(users: User[], date: number): { color: string, isMatchingMonth: boolean } {
+        for (const user of users) {
+          if (user.startDate && user.endDate) {
+            const currentDate = new Date(this.currentYear, this.currMon, date);
+            const startDate = new Date(user.startDate);
+            const endDate = new Date(user.endDate);
+            
+            // Check if the current date is within the start and end date range
+            if (currentDate >= startDate && currentDate <= endDate) {
+              const isMatchingMonth = this.months[startDate.getMonth() ] == this.currentMonth;
+              console.log(this.months[startDate.getMonth() ]);
+              console.log(this.currentMonth);
+              
+              console.log(isMatchingMonth);
+              
+              
+              return { color: isMatchingMonth ? user.color : 'transparent', isMatchingMonth };
+            }
+          }
+        }
+        
+        return { color: 'transparent', isMatchingMonth: false };
       }
+      
       
       
 }

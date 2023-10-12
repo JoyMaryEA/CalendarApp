@@ -3,7 +3,7 @@
     <p>Calendar app</p>
     <div style="height: .5rem; display: flex; align-items: center;">
         <p style="font-size: 16px; margin-right: 3rem;">Welcome, {{username}}</p>
-        <button class="bt-logout" (click)="logout()">Logout</button>
+        <button class="bt-logout" (click)="logout()" routerLink="/login">Logout</button>
     </div>
    
 </nav>
@@ -29,20 +29,26 @@
                 <th>Sat</th>
             </thead>
             <tbody>
-                <tr *ngFor="let row of dates; let i = index">
-                  <td *ngFor="let date of row; let j = index">
-                    <span *ngIf="date === 0"> </span>
-                    <ng-container *ngIf="date !== 0 ">
-                      <div class="dates"
-                        [ngStyle]="{
-                            'background-color': isMatchingMonthAndYear(users[i], date) ? users[i].color : 'transparent'
-                        }"
-                      >
-                        {{ date }}
+              <tr *ngFor="let row of dates; let i = index">
+                <td *ngFor="let date of row; let j = index">
+                  <span *ngIf="date === 0"> </span>
+                  <ng-container *ngIf="date !== 0">
+                    <div class="dates" [ngStyle]="{
+                      'background-color': isMatchingMonthAndYearForAnyUser(users, date) ? isMatchingMonthAndYearForAnyUser(users, date).color : 'transparent'
+                    }">
+                      {{ date }}
+                      <div class="inside-dates" *ngFor="let user of users; let k = index">
+                        <span style="font-size: 10px;" *ngIf="user.userDates.includes(date) && isMatchingMonthAndYearForAnyUser(users, date).isMatchingMonth">
+                          {{ user.name }}
+                        </span>
                       </div>
-                    </ng-container>
-                  </td>
-                </tr>
+                    </div>
+                  </ng-container>
+                </td>
+              </tr>
+              
+              
+              
               </tbody>
         </table>
     </div>
