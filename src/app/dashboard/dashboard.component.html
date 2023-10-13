@@ -36,7 +36,7 @@
                     <div class="dates"  > 
                       {{ date }} 
                       <div class="inside-dates" *ngFor="let user of users; let k = index">
-                        <span style="font-size: 10px;" *ngIf="user.userDates.includes(date) && user.startDate.getMonth()=== currDate.getMonth() ">
+                        <span style="font-size: 10px; padding: .3rem .5rem;" *ngIf="user.userDates.includes(date) && user.startDate.getMonth() - 1 === currDate.getMonth() "[ngStyle]="{ 'background-color': user.color }">
                           {{ user.name }}
                         </span>
                       </div>
@@ -60,10 +60,16 @@
         <div>
             <label for="startDate">Start Date:</label>
             <input type="date" id="startDate" name="startDate" required formControlName="startDate" >
+            <div style="color: red; font-size: 10px;" *ngIf="isRequired">
+              Start Date is required.
+            </div>
         </div> 
        <div>
         <label for="endDate">End Date:</label>
         <input type="date" id="endDate" name="endDate" required formControlName="endDate">
+        <div style="color: red; font-size: 10px;" *ngIf="isRequired">
+          End Date is required.
+        </div>
        </div>     
         <button type="submit">Submit</button>
       </form>

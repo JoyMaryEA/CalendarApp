@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Router, RouterModule } from '@angular/router';
+
 
 interface User {
   name: string;
@@ -41,11 +42,12 @@ export class DashboardComponent implements OnInit{
    myForm:FormGroup
   monthCheck:string =''
   yearCheck:string = ''
+  isRequired =false
 
   constructor(private fb: FormBuilder) {
     this.myForm = this.fb.group({
-      startDate: [''],
-      endDate: [''],
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required],
     });
   } 
     ngOnInit(){
@@ -63,11 +65,19 @@ export class DashboardComponent implements OnInit{
   }
 
   submitForm() {
-   this.users.push({name:localStorage.getItem("username")!, startDate:this.stringToDate(this.myForm.get('startDate')!.value),endDate:this.stringToDate(this.myForm.get('endDate')!.value),color:this.getRandomLightColor(), userDates:[]})
-   console.log(this.users);
-   this.staffLeaveDays()
-   this.myForm.reset();
-  this.closeModal();
+    if(this.myForm.get('startDate')!.value || this.myForm.get('endDate')!.value){
+      this.isRequired=false
+      this.users.push({name:localStorage.getItem("username")!, startDate:this.stringToDate(this.myForm.get('startDate')!.value),endDate:this.stringToDate(this.myForm.get('endDate')!.value),color:this.getRandomLightColor(), userDates:[]})
+      console.log(this.users);
+      this.staffLeaveDays()
+      this.myForm.reset();
+     this.closeModal();
+    }
+    else {
+      this.isRequired=true
+      console.log("error");
+      
+    }
 
   }
   stringToDate(dateStr:string){
@@ -167,11 +177,6 @@ export class DashboardComponent implements OnInit{
         });
         
         console.log(this.users);
-
-
       }
-  
-    
-
-       
+        
 }
