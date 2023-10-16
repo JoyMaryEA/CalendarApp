@@ -82,7 +82,7 @@ export class DashboardComponent implements OnInit{
   }
   stringToDate(dateStr:string){
    let dateArr= dateStr.split("-")
-   return new Date( parseInt(dateArr[0], 10),parseInt(dateArr[1], 10),parseInt(dateArr[2], 10))
+   return new Date( parseInt(dateArr[0], 10),parseInt(dateArr[1], 10) - 1,parseInt(dateArr[2], 10))
   }
 
   nextMonth() {
@@ -165,7 +165,6 @@ export class DashboardComponent implements OnInit{
         this.users.forEach((user) => {
           const startDate = new Date(user.startDate);
           const endDate = new Date(user.endDate);
-        
           user.userDates = Array.from(
             { length: (endDate.getDate() - startDate.getDate() + 1) },
             (_, index) => {
@@ -178,5 +177,5 @@ export class DashboardComponent implements OnInit{
         
         console.log(this.users);
       }
-        
+      
 }

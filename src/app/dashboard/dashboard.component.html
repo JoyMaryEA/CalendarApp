@@ -36,7 +36,7 @@
                     <div class="dates"  > 
                       {{ date }} 
                       <div class="inside-dates" *ngFor="let user of users; let k = index">
-                        <span style="font-size: 10px; padding: .3rem .5rem;" *ngIf="user.userDates.includes(date) && user.startDate.getMonth() - 1 === currDate.getMonth() "[ngStyle]="{ 'background-color': user.color }">
+                        <span style="font-size: 10px; padding: .3rem .5rem;" *ngIf="user.userDates.includes(date) && user.startDate.getMonth() === currDate.getMonth()  "[ngStyle]="{ 'background-color': user.color }">
                           {{ user.name }}
                         </span>
                       </div>
