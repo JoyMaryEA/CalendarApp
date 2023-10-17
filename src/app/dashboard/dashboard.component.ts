@@ -1,23 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Router, RouterModule } from '@angular/router';
-
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { v4 as uid } from 'uuid';
 
 interface User {
+  id:string
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   color: string;
   userDates: number[]
 }
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -31,11 +33,13 @@ export class DashboardComponent implements OnInit{
   currentMonth: string = this.months[this.currDate.getMonth() ]
   currentYear: number = this.currDate.getFullYear()
    username = ''
-  users:User[] =[{ name: "joy",
-    startDate: new Date(2023,9,1),
-    endDate:  new Date(2023,9,7),
-    color: 'rgb(217, 249, 200)',
-    userDates: [1,2,3,4,5,6,7]} ]
+  users:User[] =[
+    // { name: "joy",
+    // startDate: new Date(2023,9,1),
+    // endDate:  new Date(2023,9,7),
+    // color: 'rgb(217, 249, 200)',
+    // userDates: [1,2,3,4,5,6,7]} 
+  ]
     faSignOut=faSignOut
 
     dates :number[][]  = []
@@ -44,17 +48,22 @@ export class DashboardComponent implements OnInit{
   yearCheck:string = ''
   isRequired =false
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private http:HttpClient,private cdr: ChangeDetectorRef) {
     this.myForm = this.fb.group({
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
     });
+    this.http.get<User[]>("http://localhost:3000/users").subscribe((usersData)=>{
+        console.log(usersData);
+        this.users = usersData
+        this.staffLeaveDays()
+  })
   } 
     ngOnInit(){
     this.username = localStorage.getItem("username") as string
     this.dates = this.date2calendar({date:this.currDate})
-    this.staffLeaveDays()
-    console.log(this.dates);
+    
+    // console.log(this.dates);
     
     }
   closeModal() {
@@ -67,11 +76,17 @@ export class DashboardComponent implements OnInit{
   submitForm() {
     if(this.myForm.get('startDate')!.value || this.myForm.get('endDate')!.value){
       this.isRequired=false
-      this.users.push({name:localStorage.getItem("username")!, startDate:this.stringToDate(this.myForm.get('startDate')!.value),endDate:this.stringToDate(this.myForm.get('endDate')!.value),color:this.getRandomLightColor(), userDates:[]})
+      //TODO
+     this.addUser({id:uid(),name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), userDates:[]}).subscribe((res)=>{
+      console.log(res);
+      
+     })
+
       console.log(this.users);
       this.staffLeaveDays()
       this.myForm.reset();
      this.closeModal();
+    
     }
     else {
       this.isRequired=true
@@ -80,7 +95,13 @@ export class DashboardComponent implements OnInit{
     }
 
   }
-  stringToDate(dateStr:string){
+  addUser(user:User): Observable<any> {
+    const headers = { 'content-type': 'application/json'}  
+    const body=JSON.stringify(user);
+    console.log(body)
+    return this.http.post("http://localhost:3000/users", body,{'headers':headers})
+  }
+  stringToDate(dateStr:string){    
    let dateArr= dateStr.split("-")
    return new Date( parseInt(dateArr[0], 10),parseInt(dateArr[1], 10) - 1,parseInt(dateArr[2], 10))
   }
@@ -162,20 +183,50 @@ export class DashboardComponent implements OnInit{
       }
     
       staffLeaveDays(){
+        console.log(this.users);
+        
         this.users.forEach((user) => {
-          const startDate = new Date(user.startDate);
-          const endDate = new Date(user.endDate);
-          user.userDates = Array.from(
-            { length: (endDate.getDate() - startDate.getDate() + 1) },
-            (_, index) => {
-              const date = new Date(startDate);
-              date.setDate(startDate.getDate() + index);
-              return date.getDate();
-            }
-          );
+          const startDate = new Date( this.stringToDate(user.startDate));
+          const endDate = new Date( this.stringToDate(user.endDate));
+          
+          while (startDate <= endDate) {
+            user.userDates.push(startDate.getDate());
+            startDate.setDate(startDate.getDate() + 1);
+          }
         });
         
         console.log(this.users);
       }
+      monthYearCheck(userStartDate:string,userEndDate:string, userDates:number[], oneDate:number){
+        //TODO
+        let startDate = this.stringToDate(userStartDate)
+        let endDate = this.stringToDate(userEndDate)
+        const splitArrays = userDates.reduce<number[][]>((result, num) => {
+          if (num === 1) {
+            result.push([]);
+          }
+          if (result.length) {
+            result[result.length - 1].push(num);
+          }
+          return result;
+        }, [[]]);
+        console.log(splitArrays);
+        
+        if (!splitArrays){
+          if (startDate.getMonth()===this.currDate.getMonth()){
+            return true
+          }
+          else return false
+        } else{
+          if (startDate.getMonth()===this.currDate.getMonth() && splitArrays[0].includes(oneDate) ){
+            return true
+          } else if (endDate.getMonth()===this.currDate.getMonth() && splitArrays[1].includes(oneDate) ){
+            return true
+          } else return false
+        }
+        
+        
+      }
+     
       
 }
