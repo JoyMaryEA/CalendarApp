@@ -139,8 +139,8 @@ export class DashboardComponent implements OnInit{
         this.currDate.setMonth(currentMonthIndex -1);
       }
       this.currentMonth = this.months[this.currDate.getMonth()];
-      const firstDay = new Date(this.currentYear, this.currDate.getMonth(), 1).getDay();
-    const lastDay = new Date(this.currentYear, this.currDate.getMonth() -1, 0).getDate();
+      const firstDay = new Date(this.currentYear, this.currDate.getMonth() , 1).getDay();
+    const lastDay = new Date(this.currentYear, this.currDate.getMonth() + 1, 0).getDate();
     const days = 7;
     const weeks = Math.ceil((firstDay + lastDay) / days);
     this.dates= Array.from({ length: weeks }).map((_, week) =>
@@ -198,7 +198,7 @@ export class DashboardComponent implements OnInit{
         console.log(this.users);
       }
       monthYearCheck(userStartDate:string,userEndDate:string, userDates:number[], oneDate:number){
-        //TODO
+        
         let startDate = this.stringToDate(userStartDate)
         let endDate = this.stringToDate(userEndDate)
         const splitArrays = userDates.reduce<number[][]>((result, num) => {
@@ -213,14 +213,14 @@ export class DashboardComponent implements OnInit{
         console.log(splitArrays);
         
         if (!splitArrays){
-          if (startDate.getMonth()===this.currDate.getMonth()){
+          if ( startDate.getFullYear() === this.currDate.getFullYear() && startDate.getMonth()===this.currDate.getMonth() ){
             return true
           }
           else return false
         } else{
-          if (startDate.getMonth()===this.currDate.getMonth() && splitArrays[0].includes(oneDate) ){
+          if (startDate.getFullYear() === this.currDate.getFullYear() && startDate.getMonth()===this.currDate.getMonth() && splitArrays[0].includes(oneDate)  ){
             return true
-          } else if (endDate.getMonth()===this.currDate.getMonth() && splitArrays[1].includes(oneDate) ){
+          } else if (startDate.getFullYear() === this.currDate.getFullYear() &&endDate.getMonth()===this.currDate.getMonth() && splitArrays[1].includes(oneDate) ){
             return true
           } else return false
         }
