@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "name": "joy",
+      "startDate": "2023-9-1",
+      "endDate": "2023-9-7",
+      "color": "rgb(217, 249, 200)",
+      "userDates": []
+    },
+    {
+      "id": "9b69b1a5-4a1a-4e76-82d7-57eca0eef0b0",
+      "name": "Sylvia",
+      "startDate": "2023-10-30",
+      "endDate": "2023-11-03",
+      "color": "rgb(218, 244, 216)",
+      "userDates": []
+    }
+  ]
+}
