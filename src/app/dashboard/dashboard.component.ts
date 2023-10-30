@@ -63,6 +63,7 @@ export class DashboardComponent implements OnInit{
     this.username = localStorage.getItem("username") as string
     this.dates = this.date2calendar({date:this.currDate})
     
+  
     // console.log(this.dates);
     
     }
@@ -76,7 +77,7 @@ export class DashboardComponent implements OnInit{
   submitForm() {
     if(this.myForm.get('startDate')!.value || this.myForm.get('endDate')!.value){
       this.isRequired=false
-      //TODO
+     
      this.addUser({id:uid(),name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), userDates:[]}).subscribe((res)=>{
       console.log(res);
       
@@ -210,7 +211,7 @@ export class DashboardComponent implements OnInit{
           }
           return result;
         }, [[]]);
-        console.log(splitArrays);
+      //  console.log(splitArrays);
         
         if (!splitArrays){
           if ( startDate.getFullYear() === this.currDate.getFullYear() && startDate.getMonth()===this.currDate.getMonth() ){
@@ -218,15 +219,12 @@ export class DashboardComponent implements OnInit{
           }
           else return false
         } else{
+          //check if idea on using splitArrays and getMonth+ index value is feasible for months more than 2
           if (startDate.getFullYear() === this.currDate.getFullYear() && startDate.getMonth()===this.currDate.getMonth() && splitArrays[0].includes(oneDate)  ){
             return true
           } else if (startDate.getFullYear() === this.currDate.getFullYear() &&endDate.getMonth()===this.currDate.getMonth() && splitArrays[1].includes(oneDate) ){
             return true
           } else return false
         }
-        
-        
-      }
-     
-      
+      }  
 }

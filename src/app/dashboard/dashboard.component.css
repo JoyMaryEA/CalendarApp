@@ -165,16 +165,27 @@ table {
       }
       
 }
-@media screen and (max-width: 390px) {
-   
+@media screen and (max-width: 426px) {
+    .dates{
+        padding: .5rem; 
+       
+    }
     .input-dates{
         margin-top: 0px;
     }
-   
+    .welc p{
+        display: none;
+    }
 .calendar-container{
     
-    height: 50vh ;}
+    height: 60vh ;}
     .bt-add-new{
         right: 1%;
+    }
+}
+@media screen and (max-width: 321px) {
+    .dates{
+        padding: .3rem; 
+             
     }
 }
