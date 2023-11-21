@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { v4 as uid } from 'uuid';
+import { UserInfoService } from '../Services/user-info.service';
 
 interface User {
   id:string
@@ -21,7 +22,8 @@ interface User {
   standalone: true,
   imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DashboardComponent implements OnInit{
   months:string[] = ['January','February','March', 'April','May','June','July','August','September','October','November','December']
@@ -33,13 +35,8 @@ export class DashboardComponent implements OnInit{
   currentMonth: string = this.months[this.currDate.getMonth() ]
   currentYear: number = this.currDate.getFullYear()
    username = ''
-  users:User[] =[
-    // { name: "joy",
-    // startDate: new Date(2023,9,1),
-    // endDate:  new Date(2023,9,7),
-    // color: 'rgb(217, 249, 200)',
-    // userDates: [1,2,3,4,5,6,7]} 
-  ]
+  users$:Observable<User[]> 
+  users: User[] = []
     faSignOut=faSignOut
 
     dates :number[][]  = []
@@ -48,21 +45,26 @@ export class DashboardComponent implements OnInit{
   yearCheck:string = ''
   isRequired =false
 
-  constructor(private fb: FormBuilder, private http:HttpClient,private cdr: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder, private http:HttpClient,private cdr: ChangeDetectorRef ,private userInfoService: UserInfoService) {
     this.myForm = this.fb.group({
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
     });
-    this.http.get<User[]>("http://localhost:3000/users").subscribe((usersData)=>{
-        console.log(usersData);
-        this.users = usersData
-        this.staffLeaveDays()
-  })
+
+    this.users$=  this.userInfoService.getAllUsers()
+    this.users$.subscribe((usersData)=>{
+      console.log(usersData);
+      this.users = usersData
+      this.staffLeaveDays()
+      this.cdr.detectChanges();
+
+})
   } 
     ngOnInit(){
     this.username = localStorage.getItem("username") as string
     this.dates = this.date2calendar({date:this.currDate})
-    
+ 
+ 
   
     // console.log(this.dates);
     
@@ -75,15 +77,13 @@ export class DashboardComponent implements OnInit{
   }
 
   submitForm() {
-    if(this.myForm.get('startDate')!.value || this.myForm.get('endDate')!.value){
+    if(this.myForm.get('startDate')!.value && this.myForm.get('endDate')!.value){
       this.isRequired=false
      
      this.addUser({id:uid(),name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), userDates:[]}).subscribe((res)=>{
       console.log(res);
       
      })
-
-      console.log(this.users);
       this.staffLeaveDays()
       this.myForm.reset();
      this.closeModal();
@@ -92,7 +92,6 @@ export class DashboardComponent implements OnInit{
     else {
       this.isRequired=true
       console.log("error");
-      
     }
 
   }
@@ -116,18 +115,21 @@ export class DashboardComponent implements OnInit{
     } else {
       this.currDate.setMonth(currentMonthIndex + 1);
     }
+    this.monthCalculations()
+  }
+  monthCalculations(){
     this.currentMonth = this.months[this.currDate.getMonth()];
-    const firstDay = new Date(this.currentYear, this.currDate.getMonth(), 1).getDay();
-    const lastDay = new Date(this.currentYear, this.currDate.getMonth() +1, 0).getDate();
-    const days = 7;
-    const weeks = Math.ceil((firstDay + lastDay) / days);
-    this.dates= Array.from({ length: weeks }).map((_, week) =>
-      Array.from({ length: days }).map((_, day) => {
-        const index = week * days + day;
-        const dateDay = index - firstDay + 1;
-        return dateDay > 0 && dateDay <= lastDay ? dateDay : 0;
-      })
-    );
+    const firstDay = new Date(this.currentYear, this.currDate.getMonth() , 1).getDay();
+  const lastDay = new Date(this.currentYear, this.currDate.getMonth() + 1, 0).getDate();
+  const days = 7;
+  const weeks = Math.ceil((firstDay + lastDay) / days);
+  this.dates= Array.from({ length: weeks }).map((_, week) =>
+    Array.from({ length: days }).map((_, day) => {
+      const index = week * days + day;
+      const dateDay = index - firstDay + 1;
+      return dateDay > 0 && dateDay <= lastDay ? dateDay : 0;
+    })
+  );
   }
   prevMonth(){
    
@@ -139,18 +141,7 @@ export class DashboardComponent implements OnInit{
       } else {
         this.currDate.setMonth(currentMonthIndex -1);
       }
-      this.currentMonth = this.months[this.currDate.getMonth()];
-      const firstDay = new Date(this.currentYear, this.currDate.getMonth() , 1).getDay();
-    const lastDay = new Date(this.currentYear, this.currDate.getMonth() + 1, 0).getDate();
-    const days = 7;
-    const weeks = Math.ceil((firstDay + lastDay) / days);
-    this.dates= Array.from({ length: weeks }).map((_, week) =>
-      Array.from({ length: days }).map((_, day) => {
-        const index = week * days + day;
-        const dateDay = index - firstDay + 1;
-        return dateDay > 0 && dateDay <= lastDay ? dateDay : 0;
-      })
-    );
+     this.monthCalculations()
     }
     
    getRandomLightColor() {
@@ -185,7 +176,8 @@ export class DashboardComponent implements OnInit{
     
       staffLeaveDays(){
         console.log(this.users);
-        
+        //TODO: && DAY!= SATURDAY || SUNDAY\
+          
         this.users.forEach((user) => {
           const startDate = new Date( this.stringToDate(user.startDate));
           const endDate = new Date( this.stringToDate(user.endDate));
@@ -227,4 +219,7 @@ export class DashboardComponent implements OnInit{
           } else return false
         }
       }  
+      refreshPage(){
+        window.location.reload();
+      }
 }

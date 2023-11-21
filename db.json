@@ -1,34 +1,19 @@
 {
   "users": [
     {
+      "id": "d3402770-df24-40de-b1e4-f977cfbfde9b",
       "name": "joy",
-      "startDate": "2023-9-1",
-      "endDate": "2023-9-7",
-      "color": "rgb(217, 249, 200)",
+      "startDate": "2023-11-06",
+      "endDate": "2023-11-09",
+      "color": "rgb(217, 234, 208)",
       "userDates": []
     },
     {
-      "id": "9b69b1a5-4a1a-4e76-82d7-57eca0eef0b0",
-      "name": "Sylvia",
-      "startDate": "2023-10-30",
-      "endDate": "2023-11-03",
-      "color": "rgb(218, 244, 216)",
-      "userDates": []
-    },
-    {
-      "id": "ffcfb4b7-1f60-4dde-bf77-a91673b3116d",
+      "id": "4c213e51-46ca-4460-a73e-f0dfb967a452",
       "name": "joy",
-      "startDate": "2023-09-28",
-      "endDate": "2023-10-03",
-      "color": "rgb(214, 220, 207)",
-      "userDates": []
-    },
-    {
-      "id": "cd71b688-5ee1-4ebf-8a61-b27a8e1e92c7",
-      "name": "Mary",
-      "startDate": "2023-10-23",
-      "endDate": "2023-10-26",
-      "color": "rgb(213, 210, 230)",
+      "startDate": "2023-11-20",
+      "endDate": "2023-11-23",
+      "color": "rgb(222, 229, 213)",
       "userDates": []
     }
   ]
