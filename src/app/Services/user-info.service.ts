@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 interface User {
@@ -9,7 +9,9 @@ interface User {
   color: string;
   userDates: number[]
 }
-
+interface SuccessMessages{
+  message:string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -22,5 +24,13 @@ export class UserInfoService {
     return this.http.get<User[]>(this.baseURL+ "users")
   }
 
-  //addUser()
+  addUser(user:User):Observable<SuccessMessages> {
+    return this.http.post<SuccessMessages>(
+      this.baseURL+'users',
+      user,
+      {
+        headers: new HttpHeaders(),
+      }
+    );
+  }
 }

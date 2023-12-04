@@ -10,46 +10,7 @@
 <div class="input-dates">
     <button class="bt-add-new" (click)="openModal()">Add new</button>
 </div>
-<div class="calendar-container">
-    <div class="calendar">
-        <div class="month-year">
-            <p id="btn-prev-next" (click)="prevMonth()" style="align-self: last baseline;">&lt;</p>
-            <p style="text-align: center; font-size: 26px; font-weight: bolder;" >{{currentMonth}}, <span>{{currentYear}}</span></p>
-            <p id="btn-prev-next" (click)="nextMonth()" style="align-self: last baseline;">&gt;</p>
-        </div>
-        
-        <table>
-            <thead>
-                <th>Sun</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thur</th>
-                <th>Fri</th>
-                <th>Sat</th>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of dates; let i = index">
-                <td *ngFor="let date of row; let j = index">
-                  <span *ngIf="date === 0"> </span>
-                  <ng-container *ngIf="date !== 0">
-                    <div class="dates"  > 
-                      {{ date }} 
-                      <div class="inside-dates" *ngFor="let user of users; let k = index">
-                        <span style="font-size: 10px; padding: .3rem .5rem;" *ngIf="user.userDates.includes(date) && monthYearCheck(user.startDate,user.endDate, user.userDates, date) && (j !== 0 && j !== row.length - 1)
-                        "[ngStyle]="{ 'background-color':   user.color }">
-                          {{ user.name }}
-                        </span>
-                      </div>
-                    </div>
-                  </ng-container>
-                </td>
-              </tr>
-              </tbody>
-        </table>
-    </div>
-    
-</div>
+<app-calendar></app-calendar>
 <div class="modal" [ngStyle]="{'display': modalVisible ? 'block' : 'none'}">
     <div class="modal-content">
             <span class="close" (click)="closeModal()">&times;</span>
