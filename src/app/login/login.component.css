@@ -43,7 +43,7 @@ input[type="password"] {
     color: #333;
 }
 
-button[type="submit"] {
+button {
     background-color: #8f8aca;
     color: #fff;
     border: none;
@@ -55,6 +55,6 @@ button[type="submit"] {
     transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+button:hover {
     background-color: #4b4499;
 }

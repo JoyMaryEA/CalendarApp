@@ -7,6 +7,14 @@
       "endDate": "2023-11-09",
       "color": "rgb(217, 234, 208)",
       "userDates": []
+    },
+    {
+      "id": "14631f49-b827-46c2-a637-e8186c1b3d4f",
+      "name": "joy",
+      "startDate": "2023-12-18",
+      "endDate": "2023-12-21",
+      "color": "rgb(254, 206, 234)",
+      "userDates": []
     }
   ]
 }
