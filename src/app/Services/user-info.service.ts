@@ -1,14 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-interface User {
-  id:string
-  name: string;
-  startDate: string;
-  endDate: string;
-  color: string;
-  userDates: number[]
-}
+import { IUser } from '../Interfaces';
+
 interface SuccessMessages{
   message:string
 }
@@ -17,14 +11,19 @@ interface SuccessMessages{
 })
 export class UserInfoService {
 
-  baseURL="http://localhost:3000/" 
+  baseURL="http://localhost:4000/" 
   constructor( private http:HttpClient) { }
 
-  getAllUsers():Observable<User[]>{
-    return this.http.get<User[]>(this.baseURL+ "users")
+  getAllUsers():Observable<IUser[]>{
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string });
+  
+    return this.http.get<IUser[]>(
+      this.baseURL+ "users",
+      {headers}
+      )
   }
 
-  addUser(user:User):Observable<SuccessMessages> {
+  addUser(user:IUser):Observable<SuccessMessages> {
     return this.http.post<SuccessMessages>(
       this.baseURL+'users',
       user,

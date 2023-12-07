@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Route, Router, RouterModule } from '@angular/router';
 import { LoginService } from '../Services/login.service';
 import { FormBuilder, FormGroup,  ReactiveFormsModule, Validators } from '@angular/forms';
 @Component({
@@ -11,8 +11,8 @@ import { FormBuilder, FormGroup,  ReactiveFormsModule, Validators } from '@angul
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
- 
-  constructor(private loginService:LoginService){}
+
+  constructor(private loginService:LoginService, private router:Router){}
   getUsername(email:string): string{
     const name= email.split(".")
     console.log(name);
@@ -23,10 +23,11 @@ export class LoginComponent {
     const email = document.querySelector("#email") as HTMLInputElement 
     const password = document.querySelector("#password") as HTMLInputElement 
     console.log(email.value,password.value);
+    let success=''
     this.loginService.login({email:email.value, password:password.value}).subscribe( response => {
-      console.log(response);
+      // console.log(response);
       console.log(response.success); 
-      
+      success = response.success 
       localStorage.setItem("token",response.token)
     },
     error => {
@@ -36,7 +37,12 @@ export class LoginComponent {
     })
     const username = this.getUsername(email.value)
     localStorage.setItem('username',username)
+    console.log(success);
     
+    //if (localStorage.getItem("token")){ // return the if to success
+      this.router.navigate(['/'])
+     
+  //  }
   }
 
 

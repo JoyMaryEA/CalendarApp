@@ -1,22 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {  FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { v4 as uid } from 'uuid';
 import { UserInfoService } from '../Services/user-info.service';
+import { IUser } from '../Interfaces';
 
-interface User {
-  id:string
-  name: string;
-  startDate: string;
-  endDate: string;
-  color: string;
-  userDates: number[]
-}
+
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -34,9 +27,8 @@ export class CalendarComponent {
   currentMonth: string = this.months[this.currDate.getMonth() ]
   currentYear: number = this.currDate.getFullYear()
    username = ''
-  users$:Observable<User[]> 
-  users: User[] = []
-    faSignOut=faSignOut
+  users$:Observable<IUser[]> 
+  users: IUser[] = []
 
     dates :number[][]  = []
   
@@ -44,7 +36,7 @@ export class CalendarComponent {
   yearCheck:string = ''
   isRequired =false
 
-  constructor(private http:HttpClient,private cdr: ChangeDetectorRef ,private userInfoService: UserInfoService) {
+  constructor(private http:HttpClient,private userInfoService: UserInfoService) {
   
 
     this.users$=  this.userInfoService.getAllUsers()
@@ -52,7 +44,6 @@ export class CalendarComponent {
       console.log(usersData);
       this.users = usersData
       this.staffLeaveDays()
-      this.cdr.detectChanges();
 
 })
   } 
@@ -62,7 +53,7 @@ export class CalendarComponent {
  
  
   
-    // console.log(this.dates);
+    console.log(this.dates);
     
     }
   closeModal() {
@@ -140,19 +131,29 @@ export class CalendarComponent {
       }
     
       staffLeaveDays(){
-        console.log(this.users);
-        //TODO: && DAY!= SATURDAY || SUNDAY\
-          
-        this.users.forEach((user) => {
-          const startDate = new Date( this.stringToDate(user.startDate));
-          const endDate = new Date( this.stringToDate(user.endDate));
-          
-          while (startDate <= endDate) {
-            user.userDates.push(startDate.getDate());
-            startDate.setDate(startDate.getDate() + 1);
-          }
-        });
-        
+      console.log(this.users);
+      
+      this.users.forEach((user) => {
+        const startDate = new Date(this.stringToDate(user.start_date));
+        const endDate = new Date(this.stringToDate(user.end_date));
+    
+        if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+           
+            user.userDates = [];
+    
+            while (startDate <= endDate) {
+                const currentDate = new Date(startDate);
+                user.userDates.push(currentDate.getDate());
+                startDate.setDate(startDate.getDate() + 1);
+            }
+    
+            console.log(user.userDates);
+        } else {
+            console.error(`Invalid date for user: ${user.email}`);
+        }
+    });
+    
+       
         console.log(this.users);
       }
       monthYearCheck(userStartDate:string,userEndDate:string, userDates:number[], oneDate:number){

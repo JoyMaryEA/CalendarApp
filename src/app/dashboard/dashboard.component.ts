@@ -9,15 +9,9 @@ import { Observable } from 'rxjs';
 import { v4 as uid } from 'uuid';
 import { UserInfoService } from '../Services/user-info.service';
 import { CalendarComponent } from '../calendar/calendar.component';
+import { IUser } from '../Interfaces';
 
-interface User {
-  id:string
-  name: string;
-  startDate: string;
-  endDate: string;
-  color: string;
-  userDates: number[]
-}
+
 interface SuccessMessages{
   message:string
 }
@@ -62,7 +56,10 @@ export class DashboardComponent implements OnInit{
     if(this.myForm.get('startDate')!.value && this.myForm.get('endDate')!.value){
       this.isRequired=false
      
-     this.addUser({id:uid(),name:localStorage.getItem("username")!, startDate:this.myForm.get('startDate')!.value,endDate:this.myForm.get('endDate')!.value,color:this.getRandomLightColor(), userDates:[]}).subscribe((usersData)=>{
+     this.addUser({
+       u_id: uid(), first_name: localStorage.getItem("username")!, start_date: this.myForm.get('startDate')!.value, end_date: this.myForm.get('endDate')!.value, color: this.getRandomLightColor()
+       
+     }).subscribe((usersData)=>{
       console.log(usersData);
       this.refreshPage()
 
@@ -80,7 +77,7 @@ export class DashboardComponent implements OnInit{
     }
 
   }
-  addUser(user:User):Observable<SuccessMessages> {
+  addUser(user:IUser):Observable<SuccessMessages> {
    
     return this.userInfoService.addUser(user)
 
