@@ -55,6 +55,7 @@ export class DashboardComponent implements OnInit{
   submitForm() {
     if(this.myForm.get('startDate')!.value && this.myForm.get('endDate')!.value){
       this.isRequired=false
+     console.log(this.myForm.get('startDate')!.value);
      
      this.addUser({
        u_id: uid(), first_name: localStorage.getItem("username")!, start_date: this.myForm.get('startDate')!.value, end_date: this.myForm.get('endDate')!.value, color: this.getRandomLightColor()
@@ -81,10 +82,6 @@ export class DashboardComponent implements OnInit{
    
     return this.userInfoService.addUser(user)
 
-  }
-  stringToDate(dateStr:string){    
-   let dateArr= dateStr.split("-")
-   return new Date( parseInt(dateArr[0], 10),parseInt(dateArr[1], 10) - 1,parseInt(dateArr[2], 10))
   }
 
   

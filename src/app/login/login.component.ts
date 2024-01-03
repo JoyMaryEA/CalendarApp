@@ -29,6 +29,7 @@ export class LoginComponent {
       console.log(response.success); 
       success = response.success 
       localStorage.setItem("token",response.token)
+      this.router.navigate(['/'])
     },
     error => {
       console.log(error.error.error); //to get msg as string
@@ -40,7 +41,7 @@ export class LoginComponent {
     console.log(success);
     
     //if (localStorage.getItem("token")){ // return the if to success
-      this.router.navigate(['/'])
+      
      
   //  }
   }

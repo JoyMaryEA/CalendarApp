@@ -24,11 +24,12 @@ export class UserInfoService {
   }
 
   addUser(user:IUser):Observable<SuccessMessages> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.post<SuccessMessages>(
       this.baseURL+'users',
       user,
       {
-        headers: new HttpHeaders(),
+        headers
       }
     );
   }

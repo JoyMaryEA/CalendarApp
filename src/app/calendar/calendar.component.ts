@@ -132,19 +132,17 @@ export class CalendarComponent {
     
       staffLeaveDays(){
       console.log(this.users);
-      
       this.users.forEach((user) => {
         const startDate = new Date(this.stringToDate(user.start_date));
         const endDate = new Date(this.stringToDate(user.end_date));
     
         if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
-           
             user.userDates = [];
-    
-            while (startDate <= endDate) {
-                const currentDate = new Date(startDate);
+            let currentDate = new Date(startDate);
+
+            while (currentDate.getTime() <= endDate.getTime()) {
                 user.userDates.push(currentDate.getDate());
-                startDate.setDate(startDate.getDate() + 1);
+                currentDate.setDate(currentDate.getDate() + 1);
             }
     
             console.log(user.userDates);
@@ -152,6 +150,7 @@ export class CalendarComponent {
             console.error(`Invalid date for user: ${user.email}`);
         }
     });
+    
     
        
         console.log(this.users);
