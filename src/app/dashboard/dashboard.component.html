@@ -1,38 +1,15 @@
 
-<nav class="nav">
-    <p>Calendar app</p>
-    
-    <div class="welc" style="height: .5rem; display: flex; align-items: center;">
-        <p style="font-size: 16px; margin-right: 3rem;">Welcome, {{username}}</p>
-        <button class="bt-logout" (click)="logout()" routerLink="/login">Logout</button>
-    </div>
-   
-</nav>
-<div class="input-dates">
-    <button class="bt-add-new" (click)="openModal()">Add new</button>
+<div class="container">
+  <app-inoffice></app-inoffice>
+  <app-calendar></app-calendar>
+  <app-user-dashboard></app-user-dashboard>
 </div>
-<app-calendar></app-calendar>
-<div class="modal" [ngStyle]="{'display': modalVisible ? 'block' : 'none'}">
-    <div class="modal-content">
-            <span class="close" (click)="closeModal()">&times;</span>
-            <h2 >Enter leave dates:</h2>
-      <form (submit)="submitForm()" [formGroup]="myForm" >
-        <div>
-            <label for="startDate">Start Date:</label>
-            <input type="date" id="startDate" name="startDate" required formControlName="startDate" >
-            <div style="color: red; font-size: 10px;" *ngIf="isRequired">
-              Start Date is required.
-            </div>
-        </div> 
-       <div>
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate" required formControlName="endDate">
-        <div style="color: red; font-size: 10px;" *ngIf="isRequired">
-          End Date is required.
-        </div>
-       </div>     
-        <button type="submit" >Submit</button>
-      </form>
-    </div>
-  </div>
+<div>
+  <nav class="nav">
+    <p>HYBRID <span>Harmony App</span> </p>
+        <p>contact us</p>
+   </nav>
+</div>
+
+
   

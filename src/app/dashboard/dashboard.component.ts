@@ -10,6 +10,8 @@ import { v4 as uid } from 'uuid';
 import { UserInfoService } from '../Services/user-info.service';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { IUser } from '../Interfaces';
+import { InofficeComponent } from '../inoffice/inoffice.component';
+import { UserDashboardComponent } from '../user-dashboard/user-dashboard.component';
 
 
 interface SuccessMessages{
@@ -18,7 +20,7 @@ interface SuccessMessages{
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule, CalendarComponent],
+  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule, CalendarComponent, InofficeComponent, UserDashboardComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.Default,
