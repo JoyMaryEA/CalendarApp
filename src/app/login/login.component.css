@@ -34,7 +34,7 @@ label {
 
 input[type="text"],
 input[type="password"] {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #8f8aca;
@@ -51,7 +51,7 @@ button {
     padding: 10px 20px;
     font-size: 18px;
     cursor: pointer;
-    width: 100%;
+    width: 97%;
     transition: background-color 0.3s;
 }
 

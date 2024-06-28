@@ -8,12 +8,12 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserInfoService } from '../Services/user-info.service';
 import { IUser } from '../Interfaces';
-
+import {OverlayModule} from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule, OverlayModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
@@ -29,7 +29,7 @@ export class CalendarComponent {
    username = ''
   users$:Observable<IUser[]> 
   users: IUser[] = []
-
+  isOpen = false;
     dates :number[][]  = []
   
   monthCheck:string =''
@@ -186,6 +186,44 @@ export class CalendarComponent {
       }  
       refreshPage(){
         window.location.reload();
+      }
+
+      isNameRepeated(name: string, currentIndex: number): boolean {
+        // Check if the name is repeated earlier in the array
+        return this.users.findIndex((user, index) => index < currentIndex && user.first_name === name) !== -1;
+      }
+      atLeastOneUserExists(date: number): boolean {
+        return this.users.some(user => user.userDates?.includes(date) && this.monthYearCheck(user.start_date, user.end_date, user.userDates!, date));
+      }
+      getUsersForDate(date: number): any[] {
+        return this.users.filter(user => user.userDates?.includes(date) && this.monthYearCheck(user.start_date, user.end_date, user.userDates!, date));
+      }
+      atLeastOneUserExistsForDay(oneDate: number): boolean {
+        return this.users.some(user =>
+          this.isDateEqual(oneDate, user.start_date, user.end_date, user.userDates!)
+        );
+      }
+      
+      getUsersForDay(oneDate: number): any[] {
+        return this.users.filter(user =>
+          this.isDateEqual(oneDate, user.start_date, user.end_date, user.userDates!)
+        );
+      }
+      
+      isDateEqual(oneDate: number, userStartDate: string, userEndDate: string, userDates: number[]): boolean {
+        const startDate = this.stringToDate(userStartDate);
+        const endDate = this.stringToDate(userEndDate);
+      
+        return (
+          startDate.getFullYear() === this.currDate.getFullYear() &&
+          startDate.getMonth() === this.currDate.getMonth() &&
+          startDate.getDate() === this.stringToDate(oneDate.toString()).getDate() &&
+          this.monthYearCheck(userStartDate, userEndDate, userDates, oneDate)
+        );
+      }
+      
+      usersInDate(uDate:number){
+        
       }
 }
 
