@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -10,10 +10,10 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./user-dashboard.component.css']
 })
 export class UserDashboardComponent {
-  constructor(){RouterModule}
+  constructor(private router:Router){}
   logout(){
     localStorage.clear()
-    
+    this.router.navigate(['/login']);
   }
 
 }
