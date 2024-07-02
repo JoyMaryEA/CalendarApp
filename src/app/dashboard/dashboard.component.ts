@@ -29,11 +29,11 @@ export class DashboardComponent implements OnInit{
   modalVisible = false;
   startDate: string = '';
   endDate: string = '';
-   username = ''
+  username = ''
   msg:string = ''
-   myForm:FormGroup
+  myForm:FormGroup
   isRequired =false
-
+ 
   constructor(private fb: FormBuilder, private http:HttpClient,private userInfoService: UserInfoService) {
     this.myForm = this.fb.group({
       startDate: ['', Validators.required],

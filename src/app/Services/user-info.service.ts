@@ -14,15 +14,7 @@ export class UserInfoService {
   baseURL="http://localhost:4000/" 
   constructor( private http:HttpClient) { }
 
-  getAllUsers():Observable<IUser[]>{
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string });
-  
-    return this.http.get<IUser[]>(
-      this.baseURL+ "users",
-      {headers}
-      )
-  }
-
+ 
   addUser(user:IUser):Observable<SuccessMessages> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.post<SuccessMessages>(
@@ -32,5 +24,10 @@ export class UserInfoService {
         headers
       }
     );
+  }
+   
+  getUsers():Observable<IUser[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+    return this.http.get<IUser[]>(this.baseURL + 'users', { headers });
   }
 }
