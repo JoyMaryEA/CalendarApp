@@ -24,7 +24,23 @@ export class CalendarComponent implements OnInit {
       (data: IUser[]) => {
         this.users = data;
         console.log(data);
-        
+           // Extract events from user data (modify based on your IUser interface)
+      const events: EventInput[] = [];
+      for (const user of this.users) {
+        if (user.start_date && user.first_name) {
+          const newEvent: EventInput = {
+            title: user.first_name,
+            start: user.start_date.toString(),
+            end: user.end_date.toString() || user.start_date.toString(), // Set end date to same as start date by default
+            allDay: true
+          };
+          events.push(newEvent); // Push the newly created event object
+        }
+      }
+
+      this.calendarOptions = {
+        events: events
+      };
       },
       (error: any) => {
         console.error('Error fetching users', error);
@@ -46,6 +62,7 @@ export class CalendarComponent implements OnInit {
           <h2>Event Details</h2>
           <p>Title: ${info.event.title}</p>
           <p>Start Date: ${info.event.startStr}</p>
+            <p>End Date: ${info.event.endStr}</p>
         `;
 
         alert(modalContent);
