@@ -2,19 +2,9 @@
     <div class="title-div">
       <h3 class="subheading">IN-OFFICE TODAY</h3>
     </div>
-     <div class="card">
-            <img src="https://robohash.org/example.png?size=50x50" alt="Avatar" class="avatar">
-            <span class="name">John Doe</span>
-        </div>
-      
-     <div class="card">
-        <img src='https://robohash.org/alicejohnson.png?size=50x50' alt="Avatar" class="avatar">
-        <span class="name">Jane Doe</span>
+    <div *ngFor="let user of users">
+      <div class="card">
+        <img  [src]="getAvatarUrl(user.first_name+user.last_name)"  alt="Avatar" class="avatar">
+        <span class="name">{{ user.first_name + " " + user.last_name}}</span>
     </div>
- 
-    <div class="card">
-        <img src="https://robohash.org/example.png?size=50x50" alt="Avatar" class="avatar">
-        <span class="name">John Doe</span>
-    </div>
-
   </div>

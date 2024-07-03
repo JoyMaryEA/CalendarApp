@@ -30,4 +30,8 @@ export class UserInfoService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.get<IUser[]>(this.baseURL + 'users', { headers });
   }
+  getUsersDays():Observable<IUser[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+    return this.http.get<IUser[]>(this.baseURL + 'users/days', { headers });
+  }
 }

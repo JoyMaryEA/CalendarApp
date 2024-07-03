@@ -20,7 +20,7 @@ export class CalendarComponent implements OnInit {
   constructor(private userInfoService: UserInfoService) { }
 
   ngOnInit() {
-    this.userInfoService.getUsers().subscribe(
+    this.userInfoService.getUsersDays().subscribe(
       (data: IUser[]) => {
         this.users = data;
         console.log(data);
