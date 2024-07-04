@@ -70,6 +70,7 @@ export class CalendarComponent implements OnInit {
         info.el.style.borderColor = 'red';
       }
     };
+   
   }
 
   handleDateSelect(info: { startStr: string; endStr: string; }) {

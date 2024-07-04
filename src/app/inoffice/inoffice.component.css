@@ -38,6 +38,25 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.empty-state {
+  text-align: center;
+  margin-top: 50px;
+  border: #E0E0E0 solid 2px;
+  border-radius: 5%;
+  width: 90%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.empty-image {
+  width: 100px;
+  height: 100px;
+}
+
+.empty-message {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #555;
+}
 
 
 @media (max-width: 680px) {

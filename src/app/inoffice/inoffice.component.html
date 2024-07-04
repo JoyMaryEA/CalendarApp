@@ -1,12 +1,24 @@
 <div class="who-is-in">
   <br>
   <br>
-    <div class="title-div">
-      <h3 class="subheading">IN-OFFICE TODAY</h3>
+  
+    <div *ngIf="users && users.length > 0; else emptyState">
+      <div class="title-div">
+        <h3 class="subheading">IN-OFFICE TODAY</h3>
+      </div>
+      <div *ngFor="let user of users">
+        <div class="card">
+          <img [src]="getAvatarUrl(user.first_name + user.last_name)" alt="Avatar" class="avatar">
+          <span class="name">{{ user.first_name + ' ' + user.last_name }}</span>
+        </div>
+      </div>
     </div>
-    <div *ngFor="let user of users">
-      <div class="card">
-        <img  [src]="getAvatarUrl(user.first_name+user.last_name)"  alt="Avatar" class="avatar">
-        <span class="name">{{ user.first_name + " " + user.last_name}}</span>
+
+  <ng-template #emptyState>
+    
+    <div class="empty-state">
+      <img src="assets/images/desert.png" alt="Desert" class="empty-image">
+      <h4 class="empty-message">{{ currentPun }}</h4>
     </div>
-  </div>
+  </ng-template>
+  
