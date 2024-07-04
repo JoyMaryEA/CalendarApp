@@ -1,14 +1,33 @@
 <div class="sidebar">
     <ul>
-    
+      <br>
+      <br> 
+      <!-- <button class="bt-logout card-sm" style="width:13%; align-self: flex-start;"><span class="material-icons">last_page</span></button> -->
        <div class="card" >
-         <img src='https://robohash.org/janesmith.png?size=50x50'alt="Avatar" class="avatar">
+         <img src='https://robohash.org/janesmith.png?size=60x60'alt="Avatar" class="avatar">
          <span class="name">Joy Mary (Me)</span>
        </div>
-          <div class="card-sm">
-            <i class="fas fa-calendar-alt"></i>
-            <span>My office days</span>
-        </div>
+          
+        <button class="bt-logout card-sm space-gap"><span class="material-icons">date_range</span>My office days</button>
+        <button class="bt-logout card-sm space-gap" (click)="logout()" ><span class="material-icons">logout</span> Logout</button>
     </ul>
-    <button class="bt-logout" (click)="logout()" >Logout</button>
+  
    </div>
+
+   <!-- <div class="sidebar closed">
+    <ul>
+      <button class="bt-logout card-sm closed"><span class="material-symbols-outlined">
+        last_page
+        </span></button>
+       <div class="card closed" >
+         <img src='https://robohash.org/janesmith.png?size=40x40'alt="Avatar" class="avatar">
+       </div>
+          
+        <button class="bt-logout card-sm closed">My office days</button>
+        <button class="bt-logout card-sm closed" (click)="logout()" >Logout</button>
+    </ul>
+  
+   </div> -->
+
+
+   
