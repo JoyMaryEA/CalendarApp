@@ -16,6 +16,7 @@ export class InofficeComponent {
   constructor(private router:Router,private userInfoService: UserInfoService){}
   currentPun!: string;
   currentDate!: string;
+  totalSeats: number = 5;
   puns: string[] = [
     "Looks like it's a bit of a desert in here today!",
     "No one's here! It's eerily quiet...",
@@ -75,4 +76,7 @@ export class InofficeComponent {
       this.currentPun = this.getRandomPun();
     }
   } 
+  get progress(): number {
+    return (this.users.length / this.totalSeats) * 100;
+  }
 }

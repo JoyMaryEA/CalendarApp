@@ -57,8 +57,28 @@
   font-size: 1.2em;
   color: #555;
 }
+.office-capacity, .in-office{
+  height: 50%;
+}
+.office-capacity{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
+.progress-container {
+  width: 90%;
+  background-color: #f3f3f3;
+ 
+}
 
+.progress-bar {
+  width: 0;
+  height: 24px;
+  background-color: green;
+  transition: width 0.5s;
+}
 @media (max-width: 680px) {
 
   .who-is-in{

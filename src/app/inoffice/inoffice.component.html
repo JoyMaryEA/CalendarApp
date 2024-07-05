@@ -1,8 +1,7 @@
 <div class="who-is-in">
   <br>
-  <br>
   
-    <div *ngIf="users && users.length > 0; else emptyState">
+    <div class="in-office" *ngIf="users && users.length > 0; else emptyState">
       <div class="title-div">
         <h3 class="subheading">IN-OFFICE TODAY</h3>
       </div>
@@ -23,4 +22,15 @@
       <h4 class="empty-message">{{ currentPun }}</h4>
     </div>
   </ng-template>
+
+  <div class="office-capacity">
+    <div class="title-div">
+      <h3 class="subheading">OFFICE CAPACITY</h3>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar" [style.width]="progress + '%'"></div>
+    </div>
+    <p> <span>{{ users.length }}</span> of {{ totalSeats }} seats taken</p>
+  </div>
+</div>
   
