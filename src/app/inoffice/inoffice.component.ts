@@ -39,11 +39,17 @@ export class InofficeComponent {
     "The silence is deafening today!"
   ];
   ngOnInit() {
-    this.userInfoService.getUsers().subscribe(
+    this.userInfoService.getUsersDays().subscribe(
       (data: IUser[]) => {
-        this.users = data;
-        console.log(data);
         
+        
+        const today = new Date();
+        this.users = data.filter(user => {
+          const startDate = new Date(user.start_date);
+          const endDate = new Date(user.end_date);
+          return today >= startDate && today <= endDate;
+        });
+        //console.log(this.users)
       },
       (error: any) => {
         console.error('Error fetching users', error);

@@ -20,3 +20,7 @@ export interface IuserLogin{
 export interface error{
     error:string
 }
+export interface officeDays{
+  start_date:string,
+  end_date:string
+}

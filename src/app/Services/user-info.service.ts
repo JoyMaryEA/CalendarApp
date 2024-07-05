@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IUser } from '../Interfaces';
+import { IUser, officeDays } from '../Interfaces';
 
 interface SuccessMessages{
   message:string
@@ -33,5 +33,15 @@ export class UserInfoService {
   getUsersDays():Observable<IUser[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.get<IUser[]>(this.baseURL + 'users/days', { headers });
+  }
+  addUserOfficeDays(officeDays:officeDays):Observable<SuccessMessages> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+    return this.http.post<SuccessMessages>(
+      this.baseURL+'users',
+      officeDays,
+      {
+        headers
+      }
+    );
   }
 }

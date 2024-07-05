@@ -14,6 +14,7 @@ import { UserInfoService } from '../Services/user-info.service';
 export class UserDashboardComponent {
 
   constructor(private router:Router){}
+  username = localStorage.getItem("username")
   logout(){
     localStorage.clear()
     this.router.navigate(['/login']);

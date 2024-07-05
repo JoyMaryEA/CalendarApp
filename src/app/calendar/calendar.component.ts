@@ -3,7 +3,7 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { UserInfoService } from '../Services/user-info.service';
-import { IUser } from '../Interfaces';
+import { IUser, officeDays } from '../Interfaces';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
@@ -76,14 +76,26 @@ export class CalendarComponent implements OnInit {
   handleDateSelect(info: { startStr: string; endStr: string; }) {
     console.log('Selected date:', info.startStr);
 
-    const newEventTitle = prompt('Enter event title:', '');
+    const newEventTitle = localStorage.getItem('username');
     if (newEventTitle) {
       const newEvent: EventInput = {
         title: newEventTitle,
         start: info.startStr,
         end: info.endStr || info.startStr
       };
-
+      var officeDays:officeDays ={
+        start_date: info.startStr,
+        end_date:info.endStr || info.startStr
+      }
+      this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
+         console.log(response);
+        
+      },
+      error => {
+        console.log(error.error.error); //to get msg as string
+        
+        
+      })
       // Update the events array immutably
       this.calendarOptions.events = [
         ...(this.calendarOptions.events as EventInput[]),
