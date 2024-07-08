@@ -5,6 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { UserInfoService } from '../Services/user-info.service';
 import { IUser, officeDays } from '../Interfaces';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { DataServiceService } from '../Services/data-service.service';
 
 @Component({
   selector: 'app-calendar',
@@ -18,7 +19,7 @@ export class CalendarComponent implements OnInit {
   usersToday: IUser[] = [];
   calendarOptions!: CalendarOptions;
 
-  constructor(private userInfoService: UserInfoService) { }
+  constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
   ngOnInit() {
     this.userInfoService.getUsersDays().subscribe(
@@ -58,6 +59,9 @@ export class CalendarComponent implements OnInit {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, interactionPlugin],
       selectable: true,
+      // selectConstraint: {
+      //   daysOfWeek: [1, 2, 3, 4, 5] // allow Monday to Friday (1=Monday, 5=Friday)
+      // },
       select: this.handleDateSelect.bind(this),
       events: [
         { title: 'Event 1', start: '2024-07-04' },
@@ -66,15 +70,14 @@ export class CalendarComponent implements OnInit {
         console.log('Event clicked:', info.event);
 
         const modalContent = `
-          <h2>Event Details</h2>
-          <p>Title: ${info.event.title}</p>
+          <p>User: ${info.event.title}</p>
           <p>Start Date: ${info.event.startStr}</p>
             <p>End Date: ${info.event.endStr}</p>
         `;
 
         alert(modalContent);
 
-        info.el.style.borderColor = 'red';
+       
       }
     };
    
@@ -83,7 +86,7 @@ export class CalendarComponent implements OnInit {
   handleDateSelect(info: { startStr: string; endStr: string; }) {
     console.log('Selected date:', info.startStr);
     
-      const newEventTitle = localStorage.getItem('username');
+      const newEventTitle = localStorage.getItem('username')!.split(' ')[0];
       if (newEventTitle) {
         const newEvent: EventInput = {
           title: newEventTitle,
@@ -96,7 +99,7 @@ export class CalendarComponent implements OnInit {
         }
         this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
           console.log(response);
-          
+          this.refreshInOfficeToday()
         },
         error => {
           console.log(error.error.error); //to get msg as string
@@ -108,7 +111,11 @@ export class CalendarComponent implements OnInit {
           ...(this.calendarOptions.events as EventInput[]),
           newEvent
         ];
+       
       }
 
-}
+  }
+  refreshInOfficeToday() {
+    this.dataservice.triggerRefresh();
+  }
 }

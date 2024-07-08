@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IUser } from '../Interfaces';
 import { UserInfoService } from '../Services/user-info.service';
+import { Subscription } from 'rxjs';
+import { DataServiceService } from '../Services/data-service.service';
 
 @Component({
   selector: 'app-inoffice',
@@ -11,12 +13,14 @@ import { UserInfoService } from '../Services/user-info.service';
   templateUrl: './inoffice.component.html',
   styleUrls: ['./inoffice.component.css']
 })
-export class InofficeComponent {
+export class InofficeComponent implements OnInit, OnDestroy{
   users!: IUser[];
-  constructor(private router:Router,private userInfoService: UserInfoService){}
+  constructor(private router:Router,private userInfoService: UserInfoService,private dataService: DataServiceService){}
   currentPun!: string;
   currentDate!: string;
   totalSeats: number = 5;
+  data: any;
+  private refreshSubscription!: Subscription;
   puns: string[] = [
     "Looks like it's a bit of a desert in here today!",
     "No one's here! It's eerily quiet...",
@@ -40,6 +44,22 @@ export class InofficeComponent {
     "The silence is deafening today!"
   ];
   ngOnInit() {
+   this.loadData()
+    this.refreshSubscription = this.dataService.refresh$.subscribe(() => {
+      this.loadData();
+    });
+    this.updatePunMessage();
+  }
+  ngOnDestroy() {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
+
+  getAvatarUrl(userName:string): string {
+    return `https://robohash.org/${userName}.png?size=50x50`;
+  }
+  loadData() {
     this.userInfoService.getUsersDays().subscribe(
       (data: IUser[]) => {
         
@@ -56,14 +76,7 @@ export class InofficeComponent {
         console.error('Error fetching users', error);
       }
     );
-    
-    this.updatePunMessage();
   }
-
-  getAvatarUrl(userName:string): string {
-    return `https://robohash.org/${userName}.png?size=50x50`;
-  }
-
  
   getRandomPun(): string {
     const randomIndex = Math.floor(Math.random() * this.puns.length);
