@@ -15,7 +15,9 @@ userDates?: number[]
 export interface IuserLogin{
     success:string,
     token:string,
-    u_id:string
+    u_id:string,
+    first_name:string,
+    last_name:string
 }
 export interface error{
     error:string

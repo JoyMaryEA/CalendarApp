@@ -83,5 +83,6 @@
 
   .who-is-in{
     width: 100%;
+    height: max-content;
   }
 }

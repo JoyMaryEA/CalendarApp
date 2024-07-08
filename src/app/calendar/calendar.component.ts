@@ -15,6 +15,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 })
 export class CalendarComponent implements OnInit {
   users: IUser[] = [];
+  usersToday: IUser[] = [];
   calendarOptions!: CalendarOptions;
 
   constructor(private userInfoService: UserInfoService) { }
@@ -41,6 +42,12 @@ export class CalendarComponent implements OnInit {
       this.calendarOptions = {
         events: events
       };
+      const today = new Date();
+      this.usersToday = data.filter(user => {
+        const startDate = new Date(user.start_date);
+        const endDate = new Date(user.end_date);
+        return today >= startDate && today <= endDate;
+      });
       },
       (error: any) => {
         console.error('Error fetching users', error);
@@ -75,32 +82,33 @@ export class CalendarComponent implements OnInit {
 
   handleDateSelect(info: { startStr: string; endStr: string; }) {
     console.log('Selected date:', info.startStr);
-
-    const newEventTitle = localStorage.getItem('username');
-    if (newEventTitle) {
-      const newEvent: EventInput = {
-        title: newEventTitle,
-        start: info.startStr,
-        end: info.endStr || info.startStr
-      };
-      var officeDays:officeDays ={
-        start_date: info.startStr,
-        end_date:info.endStr || info.startStr
+    
+      const newEventTitle = localStorage.getItem('username');
+      if (newEventTitle) {
+        const newEvent: EventInput = {
+          title: newEventTitle,
+          start: info.startStr,
+          end: info.endStr || info.startStr
+        };
+        var officeDays:officeDays ={
+          start_date: info.startStr,
+          end_date:info.endStr || info.startStr
+        }
+        this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
+          console.log(response);
+          
+        },
+        error => {
+          console.log(error.error.error); //to get msg as string
+          
+          
+        })
+        // Update the events array immutably
+        this.calendarOptions.events = [
+          ...(this.calendarOptions.events as EventInput[]),
+          newEvent
+        ];
       }
-      this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
-         console.log(response);
-        
-      },
-      error => {
-        console.log(error.error.error); //to get msg as string
-        
-        
-      })
-      // Update the events array immutably
-      this.calendarOptions.events = [
-        ...(this.calendarOptions.events as EventInput[]),
-        newEvent
-      ];
-    }
-  }
+
+}
 }

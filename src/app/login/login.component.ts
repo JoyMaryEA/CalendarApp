@@ -30,6 +30,7 @@ export class LoginComponent {
       success = response.success 
       localStorage.setItem("token",response.token)
       localStorage.setItem("u_id",response.u_id)
+      localStorage.setItem('username',response.first_name + ' '+ response.last_name)
       this.router.navigate(['/'])
     },
     error => {
@@ -38,7 +39,7 @@ export class LoginComponent {
       
     })
     const username = this.getUsername(email.value)
-    localStorage.setItem('username',username)
+   
     console.log(success);
     
     //if (localStorage.getItem("token")){ // return the if to success

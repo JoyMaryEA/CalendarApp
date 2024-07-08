@@ -30,7 +30,7 @@
     <div class="progress-container">
       <div class="progress-bar" [style.width]="progress + '%'"></div>
     </div>
-    <p> <span>{{ users.length }}</span> of {{ totalSeats }} seats taken</p>
+    <p> <span>{{ totalSeats-users.length }}</span> of {{ totalSeats }} seats remaining</p>
   </div>
 </div>
   
