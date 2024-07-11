@@ -1,7 +1,13 @@
 
 <div class="container">
   <app-inoffice></app-inoffice>
-  <app-calendar></app-calendar>
+  <ng-container *ngIf="!toggleComponent">
+    <app-calendar></app-calendar>
+  </ng-container>
+  <ng-container *ngIf="toggleComponent">
+    <app-staff-summary></app-staff-summary>
+  </ng-container>
+  
   <app-user-dashboard></app-user-dashboard>
 </div>
 <div>

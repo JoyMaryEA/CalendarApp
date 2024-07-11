@@ -12,6 +12,8 @@ import { CalendarComponent } from '../calendar/calendar.component';
 import { IUser } from '../Interfaces';
 import { InofficeComponent } from '../inoffice/inoffice.component';
 import { UserDashboardComponent } from '../user-dashboard/user-dashboard.component';
+import { DataServiceService } from '../Services/data-service.service';
+import { StaffSummaryComponent } from '../staff-summary/staff-summary.component';
 
 
 interface SuccessMessages{
@@ -20,71 +22,27 @@ interface SuccessMessages{
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule,FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule, CalendarComponent, InofficeComponent, UserDashboardComponent],
+  imports: [CommonModule, CalendarComponent, InofficeComponent, UserDashboardComponent, StaffSummaryComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DashboardComponent implements OnInit{
-  modalVisible = false;
-  startDate: string = '';
-  endDate: string = '';
-  username = ''
-  msg:string = ''
-  myForm:FormGroup
-  isRequired =false
+  toggleComponent: boolean = false;
  
-  constructor(private fb: FormBuilder, private http:HttpClient,private userInfoService: UserInfoService) {
-    this.myForm = this.fb.group({
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-    });
-
+  constructor(private dataService:DataServiceService) {
+ 
   
   } 
     ngOnInit(){
-    this.username = localStorage.getItem("username") as string
-   
     
-    }
-  closeModal() {
-    this.modalVisible = false;
-  }
-  openModal(){
-    this.modalVisible=true;
-  }
-
-  submitForm() {
-    if(this.myForm.get('startDate')!.value && this.myForm.get('endDate')!.value){
-      this.isRequired=false
-     console.log(this.myForm.get('startDate')!.value);
-     
-     this.addUser({
-       u_id: uid(), first_name: localStorage.getItem("username")!, start_date: this.myForm.get('startDate')!.value, end_date: this.myForm.get('endDate')!.value, color: this.getRandomLightColor()
-       
-     }).subscribe((usersData)=>{
-      console.log(usersData);
-      this.refreshPage()
-
-}
-
-     )
-     
-      this.myForm.reset();
-     this.closeModal();
-    
-    }
-    else {
-      this.isRequired=true
-      console.log("error");
+    this.dataService.componentToggle$.subscribe(toggle => {
+      this.toggleComponent = toggle;
+    });
     }
 
-  }
-  addUser(user:IUser):Observable<SuccessMessages> {
-   
-    return this.userInfoService.addUser(user)
 
-  }
+
 
   
    getRandomLightColor() {

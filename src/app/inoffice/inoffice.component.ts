@@ -14,7 +14,7 @@ import { DataServiceService } from '../Services/data-service.service';
   styleUrls: ['./inoffice.component.css']
 })
 export class InofficeComponent implements OnInit, OnDestroy{
-  users!: IUser[];
+  users: IUser[]=[]
   constructor(private router:Router,private userInfoService: UserInfoService,private dataService: DataServiceService){}
   currentPun!: string;
   currentDate!: string;

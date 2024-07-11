@@ -1,1 +1,15 @@
-<p>staff-summary works!</p>
+<h2>All MLE Staff:</h2>
+<div class="container" #container>
+
+<div *ngFor="let user of users">
+    <div class="card" (click)="openModal(user)">
+        <img [src]="getAvatarUrl(user.first_name + user.last_name)" alt="Avatar" class="avatar">
+        <span class="name">{{user.first_name + ' ' + user.last_name}}</span>
+        <p id="u_id" style="display: none;">{{user.u_id}}</p>
+    </div>
+</div>
+<!-- data is @input in staff modal component, hence allowing us to pass user information there for display  -->
+<app-staff-modal *ngIf="showModal" [data]="selectedUser"></app-staff-modal>
+ 
+
+</div>  

@@ -12,11 +12,14 @@
     width:20%;
     height: 90vh;
   }
-  app-calendar{
+  app-calendar {
     width: 100%;
     display: flex; 
     align-items: center; 
     justify-content: center;
+  }
+  app-staff-summary{
+    width: 100%;
   }
 nav{
     background-color: #2C3E50;
