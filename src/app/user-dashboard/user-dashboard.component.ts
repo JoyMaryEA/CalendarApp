@@ -14,20 +14,27 @@ import { DataServiceService } from '../Services/data-service.service';
 })
 export class UserDashboardComponent implements OnInit{
   buttonText='Staff Summary'
+  view: 'summary' | 'officeDays' = 'summary';
   constructor(private router:Router, private dataService:DataServiceService){}
   username = localStorage.getItem("username")
   logout(){
     localStorage.clear()
     this.router.navigate(['/login']);
   }
-  toggleComponentStaffDetails(){
-    this.dataService.toggleComponentStaffDetails();
-    
-  }
+ 
   ngOnInit(): void {
     this.dataService.componentToggle$.subscribe(toggle => {
       this.buttonText = toggle ? 'Staff office days' : 'Staff Summary';
     });
+  }
+  showStaffSummary() {
+    this.view = 'summary';
+    this.dataService.setCalendarView()
+  }
+
+  showStaffOfficeDays() {
+    this.view = 'officeDays';
+    this.dataService.setSummaryView()
   }
 
 }

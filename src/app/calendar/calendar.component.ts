@@ -25,7 +25,7 @@ export class CalendarComponent implements OnInit {
     this.userInfoService.getUsersDays().subscribe(
       (data: IUser[]) => {
         this.users = data;
-        console.log(data);
+       // console.log(data);
            // Extract events from user data (modify based on your IUser interface)
       const events: EventInput[] = [];
       for (const user of this.users) {
