@@ -42,6 +42,9 @@ nav{
   nav p span{
     font-weight: 400;
   }
+  .fc-view-harness, .fc-view-harness-active{
+    min-height: 500px;
+  }
   @media (max-width: 680px) {
     .container{
       flex-direction: column;

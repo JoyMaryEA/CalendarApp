@@ -4,9 +4,13 @@
     width: 50%;
     height: 80%;
   }
-  #calendar .fc-view-harness fc-view-harness-active{
+  #calendar{
     height: 50%;
   }
+  .fc-view-harness, .fc-view-harness-active{ 
+      min-height: 500px;
+  }
+
 
 @media (max-width: 680px) {
   

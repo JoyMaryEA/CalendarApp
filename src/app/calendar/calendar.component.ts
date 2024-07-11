@@ -62,6 +62,7 @@ export class CalendarComponent implements OnInit {
       // selectConstraint: {
       //   daysOfWeek: [1, 2, 3, 4, 5] // allow Monday to Friday (1=Monday, 5=Friday)
       // },
+      contentHeight: 'auto', 
       select: this.handleDateSelect.bind(this),
       events: [
         { title: 'Event 1', start: '2024-07-04' },
