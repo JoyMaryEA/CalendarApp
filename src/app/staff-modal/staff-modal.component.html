@@ -1,7 +1,30 @@
 <div class="modal" *ngIf="data">
     <div class="modal-content">
       <span class="close" (click)="closeModal()">&times;</span>
-      <p>{{ data.first_name }}</p>
+      <div class="card" >
+        <img [src]="getAvatarUrl(data.first_name + data.last_name)" alt="Avatar" class="avatar">
+        <span class="name">{{data.first_name + ' ' + data.last_name}}</span>
+        <p id="u_id" style="display: none;">{{data.u_id}}</p>
+      </div>
+      <!-- <div class="calendar">
+        <app-viewonly-calendar [data]="userDates"></app-viewonly-calendar>
+      </div> -->
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Days in Office</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of monthlyData">
+            <td>{{ item.month }}</td>
+            <td>{{ item.daysInOffice }}</td>
+            <td [ngClass]="{'complete': item.status === 'Complete', 'incomplete': item.status === 'Incomplete'}">{{ item.status }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   

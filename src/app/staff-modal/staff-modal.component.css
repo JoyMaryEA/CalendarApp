@@ -2,7 +2,7 @@
 .modal {
     display: block;
     position: fixed;
-    z-index: 1;
+    z-index: 0;
     left: 0;
     top: 0;
     width: 100%;
@@ -14,10 +14,12 @@
   
   .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 2% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    border-radius:30px;
+    width: 60%;
+    height: 70%;
   }
   
   .close {
@@ -34,3 +36,73 @@
     cursor: pointer;
   }
   
+  .card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid #E0E0E0;
+    border-radius: 5px;
+    margin: 10px;
+    gap: .9rem;
+    width: 40%;
+}
+
+.avatar {
+    border-radius: 50%;
+    border: 2px solid #2C3E50 ;
+    width: 50px;
+    height: 50px;
+    margin: .5rem ;
+}
+
+.name {
+    font-size: 16px;
+    color: #2C3E50;
+}
+
+.calendar{
+  height: 50%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px; /* Adjust margin as needed */
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+
+.complete {
+  color: green;
+  font-weight: bold;
+}
+
+.incomplete {
+  color: red;
+  font-weight: bold;
+}
