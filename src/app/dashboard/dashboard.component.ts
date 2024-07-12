@@ -9,11 +9,12 @@ import { Observable } from 'rxjs';
 import { v4 as uid } from 'uuid';
 import { UserInfoService } from '../Services/user-info.service';
 import { CalendarComponent } from '../calendar/calendar.component';
-import { IUser } from '../Interfaces';
+import { IUser, View } from '../Interfaces';
 import { InofficeComponent } from '../inoffice/inoffice.component';
 import { UserDashboardComponent } from '../user-dashboard/user-dashboard.component';
 import { DataServiceService } from '../Services/data-service.service';
 import { StaffSummaryComponent } from '../staff-summary/staff-summary.component';
+import { ViewonlyCalendarComponent } from '../viewonly-calendar/viewonly-calendar.component';
 
 
 interface SuccessMessages{
@@ -22,13 +23,14 @@ interface SuccessMessages{
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CalendarComponent, InofficeComponent, UserDashboardComponent, StaffSummaryComponent],
+  imports: [CommonModule, CalendarComponent, InofficeComponent, UserDashboardComponent, StaffSummaryComponent, ViewonlyCalendarComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DashboardComponent implements OnInit{
-  toggleComponent: boolean = false;
+  toggleComponent: View = View.StaffOfficeDays
+  u_id= localStorage.getItem('u_id');
  
   constructor(private dataService:DataServiceService) {
  

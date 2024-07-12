@@ -14,7 +14,7 @@ import { DataServiceService } from '../Services/data-service.service';
 })
 export class UserDashboardComponent implements OnInit{
   buttonText='Staff Summary'
-  view: 'summary' | 'officeDays' = 'summary';
+  view: 'summary' | 'officeDays' | 'myOfficeDates' = 'summary';
   constructor(private router:Router, private dataService:DataServiceService){}
   username = localStorage.getItem("username")
   logout(){
@@ -37,4 +37,8 @@ export class UserDashboardComponent implements OnInit{
     this.dataService.setSummaryView()
   }
 
+  showOfficeDates(){
+    this.view = 'myOfficeDates';
+    this.dataService.setMyOfficeDatesView()
+  }
 }

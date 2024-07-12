@@ -1,13 +1,15 @@
 
 <div class="container">
   <app-inoffice></app-inoffice>
-  <ng-container *ngIf="!toggleComponent">
-    <app-calendar></app-calendar>
-  </ng-container>
-  <ng-container *ngIf="toggleComponent">
-    <app-staff-summary></app-staff-summary>
-  </ng-container>
-  
+    <ng-container *ngIf="toggleComponent == 'summary'">
+      <app-calendar></app-calendar>
+    </ng-container>
+    <ng-container *ngIf="toggleComponent == 'staffOfficeDays'">
+      <app-staff-summary></app-staff-summary>
+    </ng-container>
+    <ng-container *ngIf="toggleComponent == 'myOfficeDates'">
+     <app-viewonly-calendar [data]="u_id"></app-viewonly-calendar>
+    </ng-container>
   <app-user-dashboard></app-user-dashboard>
 </div>
 <div>

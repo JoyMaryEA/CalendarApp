@@ -25,5 +25,18 @@ export interface error{
 export interface officeDays{
   start_date:string,
   end_date:string,
-  color?:string
+  color?:string,
+  
+}
+export interface calendarEvent{
+  start:string,
+  end:string,
+  title:string,
+  
+}
+
+export enum View {
+  Summary = 'summary',
+  StaffOfficeDays = 'staffOfficeDays',
+  MyOfficeDates = 'myOfficeDates'
 }

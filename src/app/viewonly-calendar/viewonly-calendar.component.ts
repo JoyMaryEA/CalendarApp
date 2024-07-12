@@ -1,11 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CalendarOptions, EventInput } from '@fullcalendar/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { UserInfoService } from '../Services/user-info.service';
-import { IUser, officeDays } from '../Interfaces';
+import { officeDays } from '../Interfaces';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { DataServiceService } from '../Services/data-service.service';
 
 @Component({
   selector: 'app-viewonly-calendar',
@@ -14,42 +13,61 @@ import { DataServiceService } from '../Services/data-service.service';
   templateUrl: './viewonly-calendar.component.html',
   styleUrls: ['./viewonly-calendar.component.css']
 })
-export class ViewonlyCalendarComponent {
-  @Input() data! :officeDays[] | null
+export class ViewonlyCalendarComponent implements OnInit, OnChanges {
+  @Input() data!: string | null;
   calendarOptions!: CalendarOptions;
-  userEvents: any
 
-  constructor() {     this.calendarOptions = {
-    initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin, interactionPlugin],
-    selectable: true,
-    events: this.userEvents,
-    eventClick: (info) => {
-      console.log('Event clicked:', info.event);
+  constructor(private userInfoService: UserInfoService) {}
 
-      const modalContent = `
-        <p>User: ${info.event.title}</p>
-        <p>Start Date: ${info.event.startStr}</p>
-          <p>End Date: ${info.event.endStr}</p>
-      `;
-
-      alert(modalContent);
-     
-  },
- 
-} }
-
-  ngOnInit() {
-    console.log(this.data);
-    if(this.data){
-     this.userEvents= this.data!.map((oneEvent)=>{
-      return {
-        title:'',
-        start:oneEvent.start_date,
-        end:oneEvent.end_date
-      }
-     })
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && this.data) {
+      this.fetchUserEvents();
+    }
   }
-}
-  
+
+  ngOnInit(): void {
+    this.initializeCalendarOptions();
+    if (this.data) {
+      this.fetchUserEvents();
+    }
+  }
+
+  fetchUserEvents(): void {
+    if (this.data) {
+      this.userInfoService.getOneUserDays(this.data).subscribe(
+        (data: officeDays[]) => {
+          const events = data.map((date) => ({
+            title: 'me',
+            start: date.start_date,
+            end: date.end_date,
+            allDay: true
+          }));
+          this.calendarOptions.events = events;
+          // To trigger change detection if needed
+          this.calendarOptions = { ...this.calendarOptions };
+        },
+        (error) => {
+          console.error('Error fetching user events', error);
+        }
+      );
+    }
+  }
+
+  initializeCalendarOptions(): void {
+    this.calendarOptions = {
+      initialView: 'dayGridMonth',
+      plugins: [dayGridPlugin, interactionPlugin],
+      selectable: true,
+      contentHeight: 'auto',
+      events: [],
+      eventClick: (info) => {
+        const modalContent = `
+          <p>User: ${info.event.title}</p>
+          <p>Start Date: ${info.event.startStr}</p>
+          <p>End Date: ${info.event.endStr}</p>
+        `;
+        alert(modalContent);
+      }
+    };
+  }
 }

@@ -1,16 +1,16 @@
  
  
-  .calendar {
+  .calendar-viewonly {
     width: 50%;
     height: 80%;
   }
-  #calendar .fc-view-harness fc-view-harness-active{
+  #calendarviewonly .fc-view-harness fc-view-harness-active{
     height: 50%;
   }
 
 @media (max-width: 680px) {
   
-  .calendar{
+  .calendar-viewonly{
     width: 100%;
     margin: 10px;
   }

@@ -13,7 +13,7 @@
     height: 90vh;
     z-index: 1;
   }
-  app-calendar {
+  app-calendar,app-viewonly-calendar {
     width: 100%;
     display: flex; 
     align-items: center; 
@@ -51,7 +51,7 @@ nav{
       height: 100%;
       gap:2rem;
     }
-    app-inoffice, app-user-dashboard,app-calendar{
+    app-inoffice, app-user-dashboard,app-calendar,app-viewonly-calendar{
         width:100%;
         height:fit-content;
       } 
