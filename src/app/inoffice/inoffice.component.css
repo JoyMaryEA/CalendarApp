@@ -54,6 +54,7 @@
 
 .empty-message {
   margin-top: 20px;
+  margin-left: .7rem;
   font-size: 1.2em;
   color: #555;
 }

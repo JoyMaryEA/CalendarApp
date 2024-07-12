@@ -10,7 +10,7 @@ export class DataServiceService {
   private refreshSource = new Subject<void>();
   refresh$ = this.refreshSource.asObservable();
   
-  private componentToggleSubject = new BehaviorSubject<View>(View.Summary);
+  private componentToggleSubject = new BehaviorSubject<View>(View.StaffOfficeDays);
   componentToggle$ = this.componentToggleSubject.asObservable();
 
   triggerRefresh() {

@@ -59,10 +59,11 @@ export class CalendarComponent implements OnInit {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, interactionPlugin],
       selectable: true,
-      // selectConstraint: {
-      //   daysOfWeek: [1, 2, 3, 4, 5] // allow Monday to Friday (1=Monday, 5=Friday)
-      // },
+      selectConstraint: {
+        daysOfWeek: [1, 2, 3, 4, 5] // allow Monday to Friday (1=Monday, 5=Friday)
+      },
       contentHeight: 'auto', 
+      dayMaxEventRows: true,
       select: this.handleDateSelect.bind(this),
       events: [
         { title: 'Event 1', start: '2024-07-04' },
@@ -73,7 +74,7 @@ export class CalendarComponent implements OnInit {
         const modalContent = `
           <p>User: ${info.event.title}</p>
           <p>Start Date: ${info.event.startStr}</p>
-            <p>End Date: ${info.event.endStr}</p>
+            <p>End Date: ${info.event.endStr}</p> 
         `;
 
         alert(modalContent);

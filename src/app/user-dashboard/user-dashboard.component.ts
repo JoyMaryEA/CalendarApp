@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IUser } from '../Interfaces';
+import { IUser, View } from '../Interfaces';
 import { UserInfoService } from '../Services/user-info.service';
 import { DataServiceService } from '../Services/data-service.service';
 
@@ -14,9 +14,11 @@ import { DataServiceService } from '../Services/data-service.service';
 })
 export class UserDashboardComponent implements OnInit{
   buttonText='Staff Summary'
-  view: 'summary' | 'officeDays' | 'myOfficeDates' = 'summary';
+  view: 'summary' | 'officeDays' | 'myOfficeDates' = 'officeDays';
   constructor(private router:Router, private dataService:DataServiceService){}
   username = localStorage.getItem("username")
+  activeButton: string = 'officeDays'; 
+
   logout(){
     localStorage.clear()
     this.router.navigate(['/login']);
@@ -24,7 +26,17 @@ export class UserDashboardComponent implements OnInit{
  
   ngOnInit(): void {
     this.dataService.componentToggle$.subscribe(toggle => {
-      this.buttonText = toggle ? 'Staff office days' : 'Staff Summary';
+      switch (toggle) {
+        case View.Summary:
+          this.activeButton = 'summary';
+          break;
+        case View.StaffOfficeDays:
+          this.activeButton = 'officeDays';
+          break;
+        case View.MyOfficeDates:
+          this.activeButton = 'myOfficeDates';
+          break;
+      }
     });
   }
   showStaffSummary() {

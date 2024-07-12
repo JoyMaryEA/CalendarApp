@@ -58,7 +58,7 @@ export class StaffModalComponent implements OnChanges {
 
       const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) ; //removed adding start day because the end date should be -1
-      //TODO: If Ii fix the db enddate to be exact date please add +1 to diffDays calculation
+      //BUG: If Ii fix the db enddate to be exact date please add +1 to diffDays calculation
       monthMap.set(startMonthKey, monthMap.get(startMonthKey)! + diffDays);
     });
 
