@@ -35,12 +35,19 @@ nav{
   nav p{
     color: #fff;
     font-weight: 600;
-    margin-left: 4rem;
     margin-right: 4rem;
     margin-top: 1rem;
   }
   nav p span{
     font-weight: 400;
+  }
+  nav img{
+    width: 3rem;
+    height: 3rem;
+  }
+  .logo{
+    display: flex;
+    margin: .5rem 2rem ;
   }
   .fc-view-harness, .fc-view-harness-active{
     min-height: 500px;

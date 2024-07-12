@@ -1,12 +1,15 @@
 <div class="body">
     <div class="login-container">
+        <div class="info">
+            <div class="logo">
+                <img src="assets/images/logo.svg" >
+                <H1>HYBRID <br> <span>Harmony</span> </H1>
+            </div>
+           
+        </div>
         <form class="login-form">
-            <h1>Login</h1>
-            <label for="email">Email</label>
-            <input type="text" id="email" name="email" placeholder="Enter your email" required>
-    
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" >
+            <input type="text" id="email" name="email" placeholder="email" required>
+            <input type="password" id="password" name="password" placeholder="password" >
     
             <button (click)="onSubmit($event)" >Login</button>
         </form>
