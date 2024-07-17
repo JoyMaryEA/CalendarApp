@@ -6,13 +6,14 @@ import { UserInfoService } from '../Services/user-info.service';
 import { IUser, officeDays } from '../Interfaces';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataServiceService } from '../Services/data-service.service';
+import { SelectUserInputComponent } from '../select-user-input/select-user-input.component';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
   standalone:true,
-  imports: [FullCalendarModule],
+  imports: [FullCalendarModule, SelectUserInputComponent],
 })
 export class CalendarComponent implements OnInit {
   dates: officeDays[] = [];

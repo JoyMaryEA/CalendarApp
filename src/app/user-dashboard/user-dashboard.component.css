@@ -1,6 +1,6 @@
 
   .sidebar{
-    background-color: #f0f0f0;
+    background-color: var(--main-gray);
     height: 92vh;
     margin-top: 0%;
   }
@@ -9,7 +9,7 @@
     margin-bottom: 20px;
 }
 img{
-  border: #2C3E50 solid 1px;
+  border: var(--main-navy-blue) solid 1px;
   border-radius: 50%;
 }
 ul{
@@ -52,7 +52,7 @@ ul{
 
 .name {
     font-size: 16px;
-    color: #2C3E50;
+    color: var(--main-navy-blue);
 }
 
 .closed {
@@ -64,7 +64,7 @@ ul{
   gap: .5rem;
 }
 .btn {
-  background-color: #f0f0f0;
+  background-color: var(--main-gray);
   border: 1px solid #ccc;
   padding: 10px 20px;
   cursor: pointer;
@@ -72,7 +72,7 @@ ul{
 }
 
 .btn.active {
-  background-color: #2C3E50;
+  background-color: var(--main-navy-blue);
   color: white;
 }
 

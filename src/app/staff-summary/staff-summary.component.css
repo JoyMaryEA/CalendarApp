@@ -17,7 +17,7 @@
     padding: 3rem 0rem;
     width:13rem;
     gap: 2rem;
-    background-color: #f0f0f0;
+    background-color: var(--main-gray);
     cursor: pointer;
 }
 
@@ -35,5 +35,5 @@
 
 .name {
     font-size: 16px;
-    color: #2C3E50;
+    color: var(--main-navy-blue);
 }

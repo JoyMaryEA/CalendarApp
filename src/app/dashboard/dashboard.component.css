@@ -23,7 +23,7 @@
     width: 100%;
   }
 nav{
-    background-color: #2C3E50;
+    background-color: var(--main-navy-blue);
     display: flex;
     justify-content: space-between;
     height: 10vh;

@@ -1,6 +1,6 @@
 
   .who-is-in{
-    background-color: #f0f0f0;
+    background-color: var(--main-gray);
     height: 92vh;
   }
   ul {
@@ -27,7 +27,7 @@
 
 .name {
     font-size: 16px;
-    color: #2C3E50;
+    color: var(--main-navy-blue);
 }
 
 .subheading {
