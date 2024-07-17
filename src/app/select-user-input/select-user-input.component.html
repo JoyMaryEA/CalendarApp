@@ -1,1 +1,25 @@
-<input type="text" placeholder="search for people..">
+
+
+<form class="example-form">
+    <div class="oneline">
+        <input type="text"
+        placeholder="  Search for people..."
+        aria-label="Number"
+        matInput
+        #userInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto">
+        <div class="selected-users" *ngIf = selectedUsers>
+           <div class="selected-usernames" *ngFor="let user of selectedUsers"> 
+               <p class="username" (click)="removeFromSelectedUsers(user.u_id)">{{user.username}} <span class="material-icons">close</span></p>
+           </div>
+       </div>
+    </div>
+     
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="addToSelectedUsers($event)">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.u_id">
+          {{option.username}}
+        </mat-option>
+      </mat-autocomplete>
+    
+  </form>

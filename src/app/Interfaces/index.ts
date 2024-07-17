@@ -48,3 +48,7 @@ export interface Imanager{
   role: number,
   team_id:number
 }
+
+export interface selectedUserInputField{
+  username:string, u_id:string
+}
