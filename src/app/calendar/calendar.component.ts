@@ -15,40 +15,35 @@ import { DataServiceService } from '../Services/data-service.service';
   imports: [FullCalendarModule],
 })
 export class CalendarComponent implements OnInit {
-  users: IUser[] = [];
-  usersToday: IUser[] = [];
+  dates: officeDays[] = [];
   calendarOptions!: CalendarOptions;
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
   ngOnInit() {
-    this.userInfoService.getUsersDays().subscribe(
+    let myUID = localStorage.getItem("u_id") as string
+    //console.log(myUID);
+    
+    this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
-        this.users = data;
+        this.dates = data;
        // console.log(data);
-           // Extract events from user data (modify based on your IUser interface)
+       
       const events: EventInput[] = [];
-      for (const user of this.users) {
-        if (user.start_date && user.first_name) {
+      for (const date of this.dates) {
+       
           const newEvent: EventInput = {
-            title: user.first_name,
-            start: user.start_date.toString(),
-            end: user.end_date.toString() || user.start_date.toString(), // Set end date to same as start date by default
-            allDay: true
-          };
-          events.push(newEvent); // Push the newly created event object
-        }
+            title: "me",
+            start: date.start_date.toString(),
+            end: date.end_date.toString() || date.start_date.toString(), // Set end date to same as start date by default
+            allDay: true,
+          }
+        events.push(newEvent); // Push the newly created event object
       }
 
       this.calendarOptions = {
         events: events
       };
-      const today = new Date();
-      this.usersToday = data.filter(user => {
-        const startDate = new Date(user.start_date);
-        const endDate = new Date(user.end_date);
-        return today >= startDate && today <= endDate;
-      });
       },
       (error: any) => {
         console.error('Error fetching users', error);
@@ -59,9 +54,8 @@ export class CalendarComponent implements OnInit {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, interactionPlugin],
       selectable: true,
-      selectConstraint: {
-        daysOfWeek: [1, 2, 3, 4, 5] // allow Monday to Friday (1=Monday, 5=Friday)
-      },
+      weekends:true,
+      selectAllow: this.selectAllow,
       contentHeight: 'auto', 
       dayMaxEventRows: true,
       select: this.handleDateSelect.bind(this),
@@ -85,13 +79,23 @@ export class CalendarComponent implements OnInit {
    
   }
 
+  selectAllow(selectInfo:any) {
+    const start = new Date(selectInfo.start);
+    const end = new Date(selectInfo.end);
+
+    for (let date = start; date < end; date.setDate(date.getDate() + 1)) {
+      if (date.getDay() === 0 || date.getDay() === 6) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   handleDateSelect(info: { startStr: string; endStr: string; }) {
     console.log('Selected date:', info.startStr);
-    
-      const newEventTitle = localStorage.getItem('username')!.split(' ')[0];
-      if (newEventTitle) {
+   
         const newEvent: EventInput = {
-          title: newEventTitle,
+          title: "me",
           start: info.startStr,
           end: info.endStr || info.startStr
         };
@@ -114,9 +118,10 @@ export class CalendarComponent implements OnInit {
           newEvent
         ];
        
-      }
+     
 
   }
+
   refreshInOfficeToday() {
     this.dataservice.triggerRefresh();
   }

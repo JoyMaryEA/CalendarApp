@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffModalComponent } from '../staff-modal/staff-modal.component';
-import { IUser } from '../Interfaces';
+import { Imanager, IUser } from '../Interfaces';
 import { UserInfoService } from '../Services/user-info.service';
 
 @Component({
@@ -21,9 +21,12 @@ export class StaffSummaryComponent implements OnInit{
   constructor(private renderer: Renderer2, private userInfoService:UserInfoService) {}
  
   ngOnInit(): void {
+    var managerLoggedIn:Imanager ={role:parseInt(localStorage.getItem('role') as string), team_id:parseInt(localStorage.getItem('team_id') as string)}
    
-    this.userInfoService.getUsers().subscribe(
+    this.userInfoService.getStaffSummaryData(managerLoggedIn).subscribe(
       (data: IUser[]) => {
+        console.log(data);
+        
         this.users = data;
       },
       (error: any) => {

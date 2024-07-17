@@ -34,10 +34,10 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
 
   fetchUserEvents(): void {
     if (this.data) {
-      this.userInfoService.getOneUserDays(this.data).subscribe(
+      this.userInfoService.getUsersDays().subscribe(
         (data: officeDays[]) => {
           const events = data.map((date) => ({
-            title: 'me',
+            title: date.first_name,
             start: date.start_date,
             end: date.end_date,
             allDay: true
@@ -57,7 +57,7 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
     this.calendarOptions = {
       initialView: 'dayGridMonth',
       plugins: [dayGridPlugin, interactionPlugin],
-      selectable: true,
+      selectable: false,
       contentHeight: 'auto',
       events: [],
       eventClick: (info) => {

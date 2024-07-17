@@ -3,13 +3,13 @@
   <app-user-dashboard></app-user-dashboard>
 
     <ng-container *ngIf="toggleComponent == 'summary'">
-      <app-calendar></app-calendar>
+      <app-viewonly-calendar [data]="u_id"></app-viewonly-calendar>
     </ng-container>
     <ng-container *ngIf="toggleComponent == 'staffOfficeDays'">
       <app-staff-summary></app-staff-summary>
     </ng-container>
     <ng-container *ngIf="toggleComponent == 'myOfficeDates'">
-     <app-viewonly-calendar [data]="u_id"></app-viewonly-calendar>
+      <app-calendar></app-calendar>
     </ng-container>
     <app-inoffice></app-inoffice>
 </div>

@@ -26,6 +26,7 @@ export class StaffModalComponent implements OnChanges {
 
   populateModal() {
     if (this.data) {
+     // this.userInfoService.getStaffSummaryData() TODO: get team_id, role to localStorage
       this.userInfoService.getOneUserDays(this.data.u_id).subscribe(
         (data: any) => {
           this.userDates = data;

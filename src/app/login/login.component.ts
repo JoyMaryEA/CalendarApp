@@ -30,6 +30,8 @@ export class LoginComponent {
       success = response.success 
       localStorage.setItem("token",response.token)
       localStorage.setItem("u_id",response.u_id)
+      localStorage.setItem("role",response.role)
+      localStorage.setItem("team_id",response.team_id)
       localStorage.setItem('username',response.first_name + ' '+ response.last_name)
       this.router.navigate(['/'])
     },

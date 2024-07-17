@@ -13,6 +13,8 @@ userDates?: number[]
   }
 
 export interface IuserLogin{
+    role:string,
+    team_id:string,
     success:string,
     token:string,
     u_id:string,
@@ -26,6 +28,7 @@ export interface officeDays{
   start_date:string,
   end_date:string,
   color?:string,
+  first_name?:string
   
 }
 export interface calendarEvent{
@@ -39,4 +42,9 @@ export enum View {
   Summary = 'summary',
   StaffOfficeDays = 'staffOfficeDays',
   MyOfficeDates = 'myOfficeDates'
+}
+
+export interface Imanager{
+  role: number,
+  team_id:number
 }
