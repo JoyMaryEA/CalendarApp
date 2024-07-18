@@ -38,6 +38,10 @@ export class UserInfoService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.get<IUser[]>(this.baseURL + 'users/days/'+u_id, { headers });
   }
+  getTeamUserDays(team_id:string):Observable<IUser[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+    return this.http.get<IUser[]>(this.baseURL + 'users/days/team/'+team_id, { headers });
+  }
   getStaffSummaryData(manager:Imanager):Observable<IUser[]> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.post<IUser[]>(this.baseURL + 'users/juniors', manager,{ headers });

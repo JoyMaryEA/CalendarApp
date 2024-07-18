@@ -34,7 +34,8 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
 
   fetchUserEvents(): void {
     if (this.data) {
-      this.userInfoService.getUsersDays().subscribe(
+      var team_id=localStorage.getItem("team_id") as string;
+      this.userInfoService.getTeamUserDays(team_id).subscribe(
         (data: officeDays[]) => {
           const events = data.map((date) => ({
             title: date.first_name,

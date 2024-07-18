@@ -17,6 +17,7 @@ export class UserDashboardComponent implements OnInit{
   view: 'summary' | 'officeDays' | 'myOfficeDates' = 'officeDays';
   constructor(private router:Router, private dataService:DataServiceService){}
   username = localStorage.getItem("username")
+  role = parseInt(localStorage.getItem("role") as string)
   activeButton: string = 'officeDays'; 
 
   logout(){
