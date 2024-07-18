@@ -2,6 +2,7 @@
  .container{
   display: flex;
   flex-direction: column;
+  z-index: 0;
  }
  app-select-user-input{
   align-self: flex-start;
@@ -13,6 +14,7 @@
   }
   #calendar{
     height: 50%;
+   
   }
   .fc-view-harness, .fc-view-harness-active{ 
       min-height: 500px;

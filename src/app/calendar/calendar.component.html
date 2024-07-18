@@ -1,5 +1,7 @@
 
-<div class="container">
+<div class="container"  >
   <app-select-user-input></app-select-user-input>
-  <div class="calendar"  ><full-calendar  [options]="calendarOptions"></full-calendar></div>
+  <div class="calendar"   ><full-calendar  [options]="calendarOptions"></full-calendar></div>
 </div>
+
+<app-confirm-modal *ngIf="showModal" [data]="numberOfDatesSelected" (buttonClicked)="onModalButtonClick()"></app-confirm-modal>

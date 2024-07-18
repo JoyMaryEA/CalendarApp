@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -8,18 +8,24 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataServiceService } from '../Services/data-service.service';
 import { SelectUserInputComponent } from '../select-user-input/select-user-input.component';
 import { forkJoin, map } from 'rxjs';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css'],
   standalone:true,
-  imports: [FullCalendarModule, SelectUserInputComponent],
+  imports: [FullCalendarModule, SelectUserInputComponent, ConfirmModalComponent, CommonModule],
 })
 export class CalendarComponent implements OnInit {
   dates: officeDays[] = [];
   calendarOptions!: CalendarOptions;
   selectedUsers: selectedUserInputField[] = [];
+  showModal:boolean =false;
+  @ViewChild(ConfirmModalComponent) modal!: ConfirmModalComponent;
+  datesSelected!: { startStr: string; endStr: string; } 
+  numberOfDatesSelected!:number
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
@@ -105,34 +111,16 @@ export class CalendarComponent implements OnInit {
   }
 
   handleDateSelect(info: { startStr: string; endStr: string; }) {
+    const startDate = new Date(info.startStr);
+    const endDate = new Date(info.endStr);
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    this.numberOfDatesSelected = timeDifference / (1000 * 3600 * 24) + 1;
     console.log('Selected date:', info.startStr);
+    console.log(this.numberOfDatesSelected);
+    
+    this.openModal()
+    this.datesSelected=info
    
-        const newEvent: EventInput = {
-          title: "me",
-          start: info.startStr,
-          end: info.endStr || info.startStr
-        };
-        var officeDays:officeDays ={
-          start_date: info.startStr,
-          end_date:info.endStr || info.startStr
-        }
-        this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
-          console.log(response);
-          this.refreshInOfficeToday()
-        },
-        error => {
-          console.log(error.error.error); //to get msg as string
-          
-          
-        })
-        // Update the events array immutably
-        this.calendarOptions.events = [
-          ...(this.calendarOptions.events as EventInput[]),
-          newEvent
-        ];
-       
-     
-
   }
 
   refreshInOfficeToday() {
@@ -168,4 +156,36 @@ export class CalendarComponent implements OnInit {
     });
   }
   
+  openModal(): void {
+    this.showModal = true; 
+  }
+
+  onModalButtonClick(){
+    var info = this.datesSelected;
+    this.showModal = false; 
+    const newEvent: EventInput = {
+      title: "me",
+      start: info.startStr,
+      end: info.endStr || info.startStr
+    };
+    var officeDays:officeDays ={
+      start_date: info.startStr,
+      end_date:info.endStr || info.startStr
+    }
+    this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
+      console.log(response);
+      this.refreshInOfficeToday()
+    },
+    error => {
+      console.log(error.error.error); //to get msg as string
+      
+      
+    })
+    // Update the events array immutably
+    this.calendarOptions.events = [
+      ...(this.calendarOptions.events as EventInput[]),
+      newEvent
+    ];
+   
+  }
 }
