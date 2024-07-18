@@ -3,10 +3,11 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { UserInfoService } from '../Services/user-info.service';
-import { IUser, officeDays } from '../Interfaces';
+import { IUser, officeDays, selectedUserInputField } from '../Interfaces';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataServiceService } from '../Services/data-service.service';
 import { SelectUserInputComponent } from '../select-user-input/select-user-input.component';
+import { forkJoin, map } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -18,19 +19,20 @@ import { SelectUserInputComponent } from '../select-user-input/select-user-input
 export class CalendarComponent implements OnInit {
   dates: officeDays[] = [];
   calendarOptions!: CalendarOptions;
+  selectedUsers: selectedUserInputField[] = [];
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
   ngOnInit() {
     let myUID = localStorage.getItem("u_id") as string
     //console.log(myUID);
-    
+    const events: EventInput[] = [];
     this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
         this.dates = data;
        // console.log(data);
        
-      const events: EventInput[] = [];
+    
       for (const date of this.dates) {
        
           const newEvent: EventInput = {
@@ -78,6 +80,16 @@ export class CalendarComponent implements OnInit {
       }
     };
    
+    this.dataservice.selectedUsers$.subscribe(users => {
+      this.selectedUsers = users;
+      
+        this.updateCalendarEvents(users,events);
+      console.log("updated");
+      console.log(this.selectedUsers);
+      
+      
+    });
+    
   }
 
   selectAllow(selectInfo:any) {
@@ -126,4 +138,34 @@ export class CalendarComponent implements OnInit {
   refreshInOfficeToday() {
     this.dataservice.triggerRefresh();
   }
+  updateCalendarEvents(users: selectedUserInputField[],eventss:any) {
+    const events: EventInput[] = [...eventss];//eventss is the current loged in user
+    const observables = users.map(user =>
+      this.userInfoService.getOneUserDays(user.u_id).pipe(
+        map((dates: IUser[]) => {
+          const userEvents = dates.map(date => ({
+            title: user.username.split(" ", 1)[0],
+            start: date.start_date.toString(),
+            end: date.end_date.toString() || date.start_date.toString(),
+            allDay: true,
+          }));
+          return userEvents;
+        })
+      )
+    );
+  
+    // Combine events from all users
+    forkJoin(observables).subscribe(userEventsArray => {
+      userEventsArray.forEach(userEvents => {
+        events.push(...userEvents);
+      });
+  
+      // Update calendar options
+      this.calendarOptions = {
+        ...this.calendarOptions,
+        events: events
+      };
+    });
+  }
+  
 }

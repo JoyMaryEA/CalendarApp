@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { View } from '../Interfaces';
+import { selectedUserInputField, View } from '../Interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,10 @@ export class DataServiceService {
   private componentToggleSubject = new BehaviorSubject<View>(View.StaffOfficeDays);
   componentToggle$ = this.componentToggleSubject.asObservable();
 
+
+  private selectedUsersSubject = new BehaviorSubject<selectedUserInputField[]>([]);
+  selectedUsers$ = this.selectedUsersSubject.asObservable();
+  
   triggerRefresh() {
     this.refreshSource.next();
   }
@@ -24,5 +28,24 @@ export class DataServiceService {
   }
   setMyOfficeDatesView(){
     this.componentToggleSubject.next(View.MyOfficeDates);
+  }
+
+  setSelectedUsers(users: selectedUserInputField[]): void {
+    this.selectedUsersSubject.next(users);
+  }
+
+  getSelectedUsers(): selectedUserInputField[] {
+    return this.selectedUsersSubject.getValue();
+  }
+  addUser(user: selectedUserInputField): void {
+    const currentUsers = this.selectedUsersSubject.getValue();
+    if (!currentUsers.some(u => u.u_id === user.u_id)) {
+      this.selectedUsersSubject.next([...currentUsers, user]);
+    }    
+  }
+
+  removeUser(u_id: string): void {
+    const currentUsers = this.selectedUsersSubject.getValue();
+    this.selectedUsersSubject.next(currentUsers.filter(user => user.u_id !== u_id));
   }
 }

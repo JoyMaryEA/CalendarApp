@@ -33,5 +33,9 @@ input[type=text]:focus {
 .username span{
     color: rgb(250, 119, 119);
 }
-
+@media (max-width: 680px) {
+    .selected-users{
+        flex-direction: column;
+    }
+}
   

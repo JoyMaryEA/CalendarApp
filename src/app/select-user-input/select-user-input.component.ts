@@ -8,11 +8,9 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { UserInfoService } from '../Services/user-info.service';
 import { IUser, selectedUserInputField } from '../Interfaces';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { DataServiceService } from '../Services/data-service.service';
 
-/**
- * @title Highlight the first autocomplete option
- */
+
 @Component({
   selector: 'app-select-user-input',
   standalone: true,
@@ -35,11 +33,10 @@ export class SelectUserInputComponent implements OnInit {
   options: selectedUserInputField[] = [];
   selectedUsers: selectedUserInputField[] = [];
   filteredOptions!: Observable<selectedUserInputField[]>;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
 
   @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private userService: UserInfoService) {}
+  constructor(private userService: UserInfoService, private dataService:DataServiceService) {}
 
   ngOnInit() {
     this.userService.getUsers().subscribe(users => {
@@ -52,6 +49,9 @@ export class SelectUserInputComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value as string || '')),
       );
+    });
+    this.dataService.selectedUsers$.subscribe(users => {
+      this.selectedUsers = users;
     });
   }
 
@@ -70,6 +70,7 @@ export class SelectUserInputComponent implements OnInit {
       let selectedUser:selectedUserInputField = {username:selectedUsername, u_id:selectedUID}
       if (!this.selectedUsers.some(user => user.username === selectedUser.username && user.u_id === selectedUser.u_id)) {
         this.selectedUsers.push(selectedUser);
+        this.dataService.addUser(selectedUser);  
       }
       
     }  
@@ -77,13 +78,14 @@ export class SelectUserInputComponent implements OnInit {
     this.userInput.nativeElement.value = '';
     this.myControl.setValue(null);
   
-    console.log(this.selectedUsers); 
+    //console.log(this.selectedUsers); 
   }
 
   removeFromSelectedUsers(u_id:string){
     const index = this.selectedUsers.findIndex(item => item.u_id === u_id);
     if (index > -1) {
       this.selectedUsers.splice(index, 1); 
+      this.dataService.removeUser(u_id); 
     }
   }
   
