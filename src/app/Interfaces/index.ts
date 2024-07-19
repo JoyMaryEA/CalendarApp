@@ -52,3 +52,8 @@ export interface Imanager{
 export interface selectedUserInputField{
   username:string, u_id:string
 }
+
+export interface confirmModalData{
+  numberOfDatesSelected:number, 
+  dateSelected:string
+}

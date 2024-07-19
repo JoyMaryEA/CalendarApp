@@ -69,6 +69,7 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
         `;
         alert(modalContent);
       }
+      
     };
   }
 }

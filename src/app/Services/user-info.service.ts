@@ -56,4 +56,27 @@ export class UserInfoService {
       }
     );
   }
+
+
+//administrative methods, calls from adminRoutes
+    getCountOfUsersByDate(date:string):Observable<number> {
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+      return this.http.post<number>(
+        this.baseURL+'adm/dates',
+        {date},
+        {
+          headers
+        }
+      );
+    }
+
+    getMaxSeatsBySubteam(subteam_id:string):Observable<number> {
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+      return this.http.get<number>(
+        this.baseURL+'adm/max/'+subteam_id,
+        {
+          headers
+        }
+      );
+    }
 }

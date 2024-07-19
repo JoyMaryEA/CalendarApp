@@ -1,14 +1,20 @@
 
-<div class="modal" *ngIf="data">
+<div class="modal" *ngIf="data && noBookedThisDate">
     <div class="modal-content">
       <span class="close" (click)="closeModal()">&times;</span>
       <div class="card" >
-        <p *ngIf="data < 3">{{ oneDateSentence }}</p>
-        <p *ngIf="data >= 3">{{ manyDatesSentence }}</p>
+        <div>
+        <div class="progress-container">
+          <div class="progress-bar" [style.width]="progress + '%'"></div>
+        </div>
+        <p> <span>{{ noMaximumBooked-noBookedThisDate }}</span> of {{ noMaximumBooked }} seats remaining</p>
+      </div>
+        <p *ngIf="data.numberOfDatesSelected < 3">{{ oneDateSentence }}</p>
+        <p *ngIf="data.numberOfDatesSelected >= 3">{{ manyDatesSentence }}</p>
        <div class="buttons">
             <button class="cancel" (click)="closeModal()">Never mind</button>
-            <button class="book" (click)="bookDates()"  *ngIf="data < 3">{{oneDate}}</button>
-            <button class="book" (click)="bookDates()"  *ngIf="data >= 3">{{manyDates}}</button>
+            <button class="book" (click)="bookDates()"  *ngIf="data.numberOfDatesSelected < 3">{{oneDate}}</button>
+            <button class="book" (click)="bookDates()"  *ngIf="data.numberOfDatesSelected >= 3">{{manyDates}}</button>
        </div>
       </div>
       

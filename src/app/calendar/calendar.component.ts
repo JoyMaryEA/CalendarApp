@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {  Component, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { UserInfoService } from '../Services/user-info.service';
-import { IUser, officeDays, selectedUserInputField } from '../Interfaces';
+import { confirmModalData, IUser, officeDays, selectedUserInputField } from '../Interfaces';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataServiceService } from '../Services/data-service.service';
 import { SelectUserInputComponent } from '../select-user-input/select-user-input.component';
@@ -25,7 +25,7 @@ export class CalendarComponent implements OnInit {
   showModal:boolean =false;
   @ViewChild(ConfirmModalComponent) modal!: ConfirmModalComponent;
   datesSelected!: { startStr: string; endStr: string; } 
-  numberOfDatesSelected!:number
+  confirmModalData!:confirmModalData
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
@@ -88,12 +88,7 @@ export class CalendarComponent implements OnInit {
    
     this.dataservice.selectedUsers$.subscribe(users => {
       this.selectedUsers = users;
-      
-        this.updateCalendarEvents(users,events);
-      console.log("updated");
-      console.log(this.selectedUsers);
-      
-      
+      this.updateCalendarEvents(users,events);      
     });
     
   }
@@ -106,6 +101,7 @@ export class CalendarComponent implements OnInit {
       if (date.getDay() === 0 || date.getDay() === 6) {
         return false;
       }
+      
     }
     return true;
   }
@@ -114,10 +110,8 @@ export class CalendarComponent implements OnInit {
     const startDate = new Date(info.startStr);
     const endDate = new Date(info.endStr);
     const timeDifference = endDate.getTime() - startDate.getTime();
-    this.numberOfDatesSelected = timeDifference / (1000 * 3600 * 24) + 1;
-    console.log('Selected date:', info.startStr);
-    console.log(this.numberOfDatesSelected);
-    
+    const numberOfDatesSelected = timeDifference / (1000 * 3600 * 24) + 1;
+    this.confirmModalData={numberOfDatesSelected,dateSelected:info.startStr}
     this.openModal()
     this.datesSelected=info
    
@@ -128,6 +122,16 @@ export class CalendarComponent implements OnInit {
   }
   updateCalendarEvents(users: selectedUserInputField[],eventss:any) {
     const events: EventInput[] = [...eventss];//eventss is the current loged in user
+
+    if (users.length === 0) {
+      // If no users, update the calendar options with an empty events array
+      this.calendarOptions = {
+        ...this.calendarOptions,
+        events: events
+      };
+      return;
+    }
+
     const observables = users.map(user =>
       this.userInfoService.getOneUserDays(user.u_id).pipe(
         map((dates: IUser[]) => {
@@ -144,16 +148,19 @@ export class CalendarComponent implements OnInit {
   
     // Combine events from all users
     forkJoin(observables).subscribe(userEventsArray => {
+     
       userEventsArray.forEach(userEvents => {
         events.push(...userEvents);
       });
   
-      // Update calendar options
+      // Update calendar options after all events are added
       this.calendarOptions = {
         ...this.calendarOptions,
-        events: events
+        events: [...events] // Ensure immutability, to detect change and update
       };
+  
     });
+    
   }
   
   openModal(): void {
@@ -186,6 +193,6 @@ export class CalendarComponent implements OnInit {
       ...(this.calendarOptions.events as EventInput[]),
       newEvent
     ];
-   
+  
   }
 }

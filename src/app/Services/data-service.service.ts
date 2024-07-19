@@ -39,13 +39,11 @@ export class DataServiceService {
   }
   addUser(user: selectedUserInputField): void {
     const currentUsers = this.selectedUsersSubject.getValue();
-    if (!currentUsers.some(u => u.u_id === user.u_id)) {
-      this.selectedUsersSubject.next([...currentUsers, user]);
-    }    
+     this.selectedUsersSubject.next(currentUsers); //TODO:figure out when this changes
   }
 
   removeUser(u_id: string): void {
     const currentUsers = this.selectedUsersSubject.getValue();
-    this.selectedUsersSubject.next(currentUsers.filter(user => user.u_id !== u_id));
+    this.selectedUsersSubject.next(currentUsers.filter(user => user.u_id !== u_id));   
   }
 }

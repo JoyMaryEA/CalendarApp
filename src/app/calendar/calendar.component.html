@@ -4,4 +4,4 @@
   <div class="calendar"   ><full-calendar  [options]="calendarOptions"></full-calendar></div>
 </div>
 
-<app-confirm-modal *ngIf="showModal" [data]="numberOfDatesSelected" (buttonClicked)="onModalButtonClick()"></app-confirm-modal>
+<app-confirm-modal *ngIf="showModal" [data]="confirmModalData" (buttonClicked)="onModalButtonClick()"></app-confirm-modal>
