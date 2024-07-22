@@ -20,6 +20,9 @@
       min-height: 500px;
   }
 
+  .fc-event {
+   width: max-content;
+  }
 
 @media (max-width: 680px) {
   

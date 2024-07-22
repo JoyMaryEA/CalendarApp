@@ -25,6 +25,7 @@ export interface error{
     error:string
 }
 export interface officeDays{
+  id?: string | undefined
   start_date:string,
   end_date:string,
   color?:string,

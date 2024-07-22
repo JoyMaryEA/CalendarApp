@@ -56,6 +56,10 @@ export class UserInfoService {
       }
     );
   }
+  deleteOfficeDays(id:string){
+    const headers  = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+    return this.http.delete<SuccessMessages>(this.baseURL + 'users/'+id,{ headers });
+  }
 
 
 //administrative methods, calls from adminRoutes

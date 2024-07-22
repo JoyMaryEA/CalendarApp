@@ -26,13 +26,14 @@ export class CalendarComponent implements OnInit {
   @ViewChild(ConfirmModalComponent) modal!: ConfirmModalComponent;
   datesSelected!: { startStr: string; endStr: string; } 
   confirmModalData!:confirmModalData
+  events: EventInput[] = [];
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
   ngOnInit() {
     let myUID = localStorage.getItem("u_id") as string
     //console.log(myUID);
-    const events: EventInput[] = [];
+   
     this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
         this.dates = data;
@@ -45,13 +46,14 @@ export class CalendarComponent implements OnInit {
             title: "me",
             start: date.start_date.toString(),
             end: date.end_date.toString() || date.start_date.toString(), // Set end date to same as start date by default
+            id:date.id,
             allDay: true,
           }
-        events.push(newEvent); // Push the newly created event object
+        this.events.push(newEvent); // Push the newly created event object
       }
 
       this.calendarOptions = {
-        events: events
+        events: this.events
       };
       },
       (error: any) => {
@@ -71,24 +73,14 @@ export class CalendarComponent implements OnInit {
       events: [
         { title: 'Event 1', start: '2024-07-04' },
       ],
-      eventClick: (info) => {
-        console.log('Event clicked:', info.event);
-
-        const modalContent = `
-          <p>User: ${info.event.title}</p>
-          <p>Start Date: ${info.event.startStr}</p>
-            <p>End Date: ${info.event.endStr}</p> 
-        `;
-
-        alert(modalContent);
-
-       
-      }
-    };
+      eventClick:this.deleteEvent.bind(this)
+        };
    
     this.dataservice.selectedUsers$.subscribe(users => {
       this.selectedUsers = users;
-      this.updateCalendarEvents(users,events);      
+      this.updateCalendarEvents(users,this.events);      
+      console.log(this.selectedUsers);
+      
     });
     
   }
@@ -194,5 +186,25 @@ export class CalendarComponent implements OnInit {
       newEvent
     ];
   
+  }
+
+  deleteEvent(info:any){
+    if(info.event.title ==='me'){ //TODO:change to add check in token to confirm if it is your day
+      console.log(info.event.id);
+      
+      this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
+        (data)=>{
+        //  console.log(data.message); //TODO: fix this, get the actual message, remove only if delete was successfull
+          
+        const eventIndex = this.events.findIndex(event => event.id === info.event.id);
+        if (eventIndex !== -1) {
+          this.events.splice(eventIndex, 1); // Remove 1 element at the found index
+          this.updateCalendarEvents(this.selectedUsers, this.events)
+        }
+        }
+      )
+    }else{
+      alert('not me')
+    }
   }
 }

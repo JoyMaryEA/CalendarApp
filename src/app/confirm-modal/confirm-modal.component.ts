@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { CommonModule } from '@angular/common';
 import { confirmModalData } from '../Interfaces';
 import { UserInfoService } from '../Services/user-info.service';
+import { Observable, combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-confirm-modal',
@@ -10,45 +11,49 @@ import { UserInfoService } from '../Services/user-info.service';
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.css']
 })
-export class ConfirmModalComponent implements OnInit{
+export class ConfirmModalComponent implements OnInit {
   @Input() data: confirmModalData | null = null;
-  @Output() buttonClicked:EventEmitter<void> = new EventEmitter<void>
-  manyDatesSentence:string = "Are you sure you want to book these dates?"
-  oneDateSentence:string = "Are you sure you want to book this date?"
-  manyDates:string = "Book dates"
-  oneDate:string = "Book date"
-  noBookedThisDate:number = 0 //default to no bookings
-  noMaximumBooked!:number 
-  subteam_id = localStorage.getItem("team_id") as string//id of team table:)
+  @Output() buttonClicked: EventEmitter<void> = new EventEmitter<void>();
+  manyDatesSentence: string = "Are you sure you want to book these dates?";
+  oneDateSentence: string = "Are you sure you want to book this date?";
+  manyDates: string = "Book dates";
+  oneDate: string = "Book date";
+  noBookedThisDate$: Observable<number> | null = null;
+  noMaximumBooked$: Observable<number> | null = null;
+  subteam_id = localStorage.getItem("team_id") as string; // id of team table
 
-  constructor(private userService:UserInfoService, private cdr: ChangeDetectorRef){}
-  
+  constructor(private userService: UserInfoService) { }
+
   ngOnInit(): void {
-      if(this.data!.numberOfDatesSelected<3){// if only one date is selected 
-        var selectedDate = this.data?.dateSelected as string
-        this.userService.getCountOfUsersByDate(selectedDate).subscribe(
-          (count)=>{
-            this.noBookedThisDate=count;
-            this.cdr.detectChanges()
-          }
-          
-        )
-        this.userService.getMaxSeatsBySubteam(this.subteam_id).subscribe((max)=>{
-          this.noMaximumBooked=max
-          this.cdr.detectChanges()
-        })
-      }
+    if (this.data && this.data.numberOfDatesSelected < 3) { // if only one date is selected
+      const selectedDate = this.data.dateSelected as string;
+      this.noBookedThisDate$ = this.userService.getCountOfUsersByDate(selectedDate);
+      this.noMaximumBooked$ = this.userService.getMaxSeatsBySubteam(this.subteam_id);
+      console.log(this.noBookedThisDate$.subscribe((data)=>console.log(data) ));
+      console.log(this.noMaximumBooked$.subscribe((data)=>console.log(data) ));
+      
+    }
   }
 
   closeModal(): void {
-   this.data=null
+    this.data = null;
   }
 
-  bookDates():void{
-    this.buttonClicked.emit()
-    this.data=null
+  bookDates(): void {
+    this.buttonClicked.emit();
+    this.data = null;
   }
-  get progress(): number {
-    return (this.noBookedThisDate / this.noMaximumBooked) * 100;
+
+  get progress$(): Observable<number> {
+    if (!this.noBookedThisDate$ || !this.noMaximumBooked$) {
+      return new Observable<number>();
+    }
+
+    return combineLatest([this.noBookedThisDate$, this.noMaximumBooked$]).pipe(
+      map(([noBookedThisDate, noMaximumBooked]) => {
+        if (noMaximumBooked === 0) return 0;
+        return (noBookedThisDate / noMaximumBooked) * 100;
+      })
+    );
   }
 }
