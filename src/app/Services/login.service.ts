@@ -1,14 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { IuserLogin } from '../Interfaces';
+import { IuserLogin, SuccessMessages } from '../Interfaces';
 
 interface Credentials{
   email:string
   password:string
-}
-interface SuccessMessages{
-  message:string
 }
 @Injectable({
   providedIn: 'root'
@@ -25,6 +22,15 @@ export class LoginService {
   
     return this.http.post<IuserLogin>(
       this.baseURL + 'login',
+      credentials,
+      { headers }
+    );
+  }
+  resetPassword(credentials:Credentials): Observable<SuccessMessages>{
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+    return this.http.put<SuccessMessages>(
+      this.baseURL + 'resetpwd',
       credentials,
       { headers }
     );

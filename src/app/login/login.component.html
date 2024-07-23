@@ -1,4 +1,5 @@
 <div class="body">
+    <div class="error" *ngIf="errorMsg">{{errorMsg}}</div>
     <div class="login-container">
         <div class="info">
             <div class="logo">
@@ -8,11 +9,15 @@
            
         </div>
         <form class="login-form">
-            <input type="text" id="email" name="email" placeholder="email" required>
-            <input type="password" id="password" name="password" placeholder="password" >
-    
+            
+                <input type="text" id="email" name="email" placeholder="email" required>
+                <input type="password" id="password" name="password" placeholder="password" >
+                <div class="reset-password" (click)="resetPass()"><p >Reset password?</p></div>
+                    
             <button (click)="onSubmit($event)" >Login</button>
         </form>
+       
     </div>
+    
 </div>
 

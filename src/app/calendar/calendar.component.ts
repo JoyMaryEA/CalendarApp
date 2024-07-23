@@ -73,8 +73,13 @@ export class CalendarComponent implements OnInit {
       events: [
         { title: 'Event 1', start: '2024-07-04' },
       ],
-      eventClick:this.deleteEvent.bind(this)
-        };
+      eventClick:this.deleteEvent.bind(this),
+      visibleRange: {
+        start: new Date().toLocaleDateString('en-US', { year: 'numeric' }),
+        end: new Date().toLocaleDateString('en-US', { year: 'numeric' }) + '-12-31'
+      },
+
+      };
    
     this.dataservice.selectedUsers$.subscribe(users => {
       this.selectedUsers = users;
@@ -84,19 +89,25 @@ export class CalendarComponent implements OnInit {
     });
     
   }
-
+ 
+   //BUG Big bug, do the insert office days then pick a user, the update is buggy
   selectAllow(selectInfo:any) {
     const start = new Date(selectInfo.start);
     const end = new Date(selectInfo.end);
-
+    
     for (let date = start; date < end; date.setDate(date.getDate() + 1)) {
       if (date.getDay() === 0 || date.getDay() === 6) {
         return false;
       }
       
     }
-    return true;
+    var nowDate = new Date()
+    if (start<= nowDate) return false;
+    //TODO:error message saying this date has passed selecting chances
+    return true
+    //return start >= this.getDateWithoutTime(new Date());
   }
+
 
   handleDateSelect(info: { startStr: string; endStr: string; }) {
     const startDate = new Date(info.startStr);
@@ -190,19 +201,25 @@ export class CalendarComponent implements OnInit {
 
   deleteEvent(info:any){
     if(info.event.title ==='me'){ //TODO:change to add check in token to confirm if it is your day
-      console.log(info.event.id);
+      // console.log(info.event.id);
+      const start = new Date(info.event.start);
+      var nowDate = new Date()
+      if (start<= nowDate){
+        alert("can't edit previous dates") //TODO: make into a good error message
+      }else{
+        this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
+          (data)=>{
+          //  console.log(data.message); //TODO: fix this, get the actual message, remove only if delete was successfull
+            
+          const eventIndex = this.events.findIndex(event => event.id === info.event.id);
+          if (eventIndex !== -1) {
+            this.events.splice(eventIndex, 1); // Remove 1 element at the found index
+            this.updateCalendarEvents(this.selectedUsers, this.events)
+          }
+          }
+        )
+      }
       
-      this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
-        (data)=>{
-        //  console.log(data.message); //TODO: fix this, get the actual message, remove only if delete was successfull
-          
-        const eventIndex = this.events.findIndex(event => event.id === info.event.id);
-        if (eventIndex !== -1) {
-          this.events.splice(eventIndex, 1); // Remove 1 element at the found index
-          this.updateCalendarEvents(this.selectedUsers, this.events)
-        }
-        }
-      )
     }else{
       alert('not me')
     }

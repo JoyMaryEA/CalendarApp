@@ -24,6 +24,9 @@ export interface IuserLogin{
 export interface error{
     error:string
 }
+export interface SuccessMessages{
+  success:string
+}
 export interface officeDays{
   id?: string | undefined
   start_date:string,

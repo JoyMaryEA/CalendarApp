@@ -11,23 +11,17 @@ import { FormBuilder, FormGroup,  ReactiveFormsModule, Validators } from '@angul
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
+  errorMsg!: string | null
   constructor(private loginService:LoginService, private router:Router){}
-  getUsername(email:string): string{
-    const name= email.split(".")
-    console.log(name);
-    return name[0]
-  }
   onSubmit(event: Event){
     event.preventDefault()
     const email = document.querySelector("#email") as HTMLInputElement 
     const password = document.querySelector("#password") as HTMLInputElement 
-    console.log(email.value,password.value);
-    let success=''
+
+    
     this.loginService.login({email:email.value, password:password.value}).subscribe( response => {
-      // console.log(response);
       console.log(response.success); 
-      success = response.success 
+      this.errorMsg=null
       localStorage.setItem("token",response.token)
       localStorage.setItem("u_id",response.u_id)
       localStorage.setItem("role",response.role)
@@ -36,19 +30,15 @@ export class LoginComponent {
       this.router.navigate(['/'])
     },
     error => {
-      console.log(error.error.error); //to get msg as string
-      
-      
-    })
-    const username = this.getUsername(email.value)
-   
-    console.log(success);
-    
-    //if (localStorage.getItem("token")){ // return the if to success
-      
-     
-  //  }
+      //console.log(error.error.error); //to get msg as string
+      this.errorMsg= 'Invalid username or password'
+      setTimeout(() => {
+        this.errorMsg=null
+      }, 1000);
+    })    
   }
-
+  resetPass(){
+    this.router.navigate(["/resetpass"])
+  }
 
 }
