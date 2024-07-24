@@ -7,6 +7,8 @@
   :root {
     --main-gray: #f0f0f0;
     --main-navy-blue: #2C3E50;
+    --main-error:rgb(254, 106, 106);
+    --main-success:rgb(138, 247, 138);
   }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

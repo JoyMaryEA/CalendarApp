@@ -27,6 +27,8 @@ export class CalendarComponent implements OnInit {
   datesSelected!: { startStr: string; endStr: string; } 
   confirmModalData!:confirmModalData
   events: EventInput[] = [];
+  myDaysThisMonth:number =0;
+  monthlyData!: { month: string; daysInOffice: number; status: string; }[];
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
@@ -37,8 +39,8 @@ export class CalendarComponent implements OnInit {
     this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
         this.dates = data;
-       // console.log(data);
-       
+      // console.log(data);
+       this.calculateMonthlyData()
     
       for (const date of this.dates) {
        
@@ -68,7 +70,7 @@ export class CalendarComponent implements OnInit {
       weekends:true,
       selectAllow: this.selectAllow,
       contentHeight: 'auto', 
-      dayMaxEventRows: true,
+      dayMaxEvents:1,
       select: this.handleDateSelect.bind(this),
       events: [
         { title: 'Event 1', start: '2024-07-04' },
@@ -163,7 +165,7 @@ export class CalendarComponent implements OnInit {
       };
   
     });
-    
+    this.calculateMonthlyData()
   }
   
   openModal(): void {
@@ -204,7 +206,7 @@ export class CalendarComponent implements OnInit {
       // console.log(info.event.id);
       const start = new Date(info.event.start);
       var nowDate = new Date()
-      if (start<= nowDate){
+      if (start< nowDate){
         alert("can't edit previous dates") //TODO: make into a good error message
       }else{
         this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
@@ -224,4 +226,38 @@ export class CalendarComponent implements OnInit {
       alert('not me')
     }
   }
+
+  calculateMonthlyData() {
+    if (!this.dates) return;
+   
+    
+    const monthMap = new Map<string, number>();
+
+    this.dates.forEach(({ start_date, end_date }) => {
+      const startDate = new Date(start_date);
+      const endDate = new Date(end_date);
+
+      const startMonth = startDate.toLocaleString('default', { month: 'long' });
+      const endMonth = endDate.toLocaleString('default', { month: 'long' });
+
+      const startMonthKey = `${startMonth} ${startDate.getFullYear()}`;
+      const endMonthKey = `${endMonth} ${endDate.getFullYear()}`;
+
+      if (!monthMap.has(startMonthKey)) monthMap.set(startMonthKey, 0);
+      if (!monthMap.has(endMonthKey)) monthMap.set(endMonthKey, 0);
+
+      const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) ; //removed adding start day because the end date should be -1
+      //BUG: If Ii fix the db enddate to be exact date please add +1 to diffDays calculation
+      monthMap.set(startMonthKey, monthMap.get(startMonthKey)! + diffDays);
+    });
+
+    this.monthlyData = Array.from(monthMap.entries()).map(([month, daysInOffice]) => ({
+      month,
+      daysInOffice,
+      status: daysInOffice >= 10 ? 'Complete' : 'Incomplete'
+    })); 
+    this.myDaysThisMonth = this.monthlyData[0].daysInOffice  
+  }
+
 }

@@ -23,7 +23,22 @@
   .fc-event {
    width: max-content;
   }
-
+  .my-days-no{
+   align-self: flex-end;
+   margin-right: 2rem;
+   
+  }
+  .red{
+    color: var(--main-error);
+    font-weight: 600;
+  }
+  .green{
+    color: var(--main-success);
+    font-weight: 600;
+  }
+  .blue-text{
+    color: var(--main-navy-blue);
+  }
 @media (max-width: 680px) {
   
   .calendar{

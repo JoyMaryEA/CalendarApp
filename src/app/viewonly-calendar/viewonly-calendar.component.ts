@@ -61,14 +61,15 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
       selectable: false,
       contentHeight: 'auto',
       events: [],
-      eventClick: (info) => {
-        const modalContent = `
-          <p>User: ${info.event.title}</p>
-          <p>Start Date: ${info.event.startStr}</p>
-          <p>End Date: ${info.event.endStr}</p>
-        `;
-        alert(modalContent);
-      }
+      // eventClick: (info) => {
+      //   const modalContent = `
+      //     <p>User: ${info.event.title}</p>
+      //     <p>Start Date: ${info.event.startStr}</p>
+      //     <p>End Date: ${info.event.endStr}</p>
+      //   `;
+      //   alert(modalContent);
+      // },
+      dayMaxEvents:1,
       
     };
   }
