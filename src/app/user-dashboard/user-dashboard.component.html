@@ -3,7 +3,8 @@
       <br> 
       <!-- <button class="bt-logout card-sm" style="width:13%; align-self: flex-start;"><span class="material-icons">last_page</span></button> -->
        <div class="card usercard" >
-        <img src="https://robohash.org/{{ username!.replace(' ', '') }}.png?size=60x60" alt="Avatar" class="avatar">
+        <p class="username-title">{{getInitials(username!)}}</p>
+        <!-- <img src="https://robohash.org/{{ username!.replace(' ', '') }}.png?size=60x60" alt="Avatar" class="avatar"> -->
          <span class="name">{{username}} (Me)</span>
        </div>
           <!-- BUG: teeny tiny bug below: the active button does not correspond to actual button,(summary in office days and officedays in summary) it works as is though, DO NOT TOUCH :) -->

@@ -13,9 +13,10 @@
     padding: 10px;
     border: 1px solid #E0E0E0;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
     max-width: 300px;
     margin: 10px;
+    gap: .5rem;
 }
 
 .avatar {
@@ -26,7 +27,7 @@
 }
 
 .name {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--main-navy-blue);
 }
 
@@ -36,7 +37,7 @@
     margin: .7rem .2rem;
     padding: 10px 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 .empty-state {
   text-align: center;
@@ -79,6 +80,15 @@
   height: 24px;
   background-color: green;
   transition: width 0.5s;
+}
+.users-list{
+  overflow: scroll;
+}
+.username-title{
+  padding: .5rem;
+  border-radius: 50%;
+  background: var(--main-navy-blue);
+  color: white;
 }
 @media (max-width: 680px) {
 

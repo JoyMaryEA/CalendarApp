@@ -5,12 +5,16 @@
       <div class="title-div">
         <h3 class="subheading">IN-OFFICE TODAY</h3>
       </div>
-      <div *ngFor="let user of users">
-        <div class="card">
-          <img [src]="getAvatarUrl(user.first_name + user.last_name)" alt="Avatar" class="avatar">
-          <span class="name">{{ user.first_name + ' ' + user.last_name }}</span>
+      <div class="users-list">
+        <div *ngFor="let user of users" >
+          <div class="card">
+            <!-- <img [src]="getAvatarUrl(user.first_name + user.last_name)" alt="Avatar" class="avatar"> -->
+            <p class="username-title">{{user.first_name.charAt(0)+ user.last_name?.charAt(0)}}</p>
+            <p class="name">{{ user.first_name + ' ' + user.last_name }}</p>
+          </div>
         </div>
       </div>
+      
     </div>
 
   <ng-template #emptyState>

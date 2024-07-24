@@ -54,4 +54,12 @@ export class UserDashboardComponent implements OnInit{
     this.view = 'myOfficeDates';
     this.dataService.setMyOfficeDatesView()
   }
+  getInitials(str:string) {
+    if (!str || typeof str !== 'string') {
+      return ''; // Handle invalid input (empty string or non-string)
+    }
+    const words = str.trim().split(' '); // Trim whitespace and split into words
+    return words.length > 0 ? words[0][0].toUpperCase() + (words.length > 1 ? words[1][0].toUpperCase() : '') : '';
+  }
+  
 }
