@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild } from '@angular/core';
+import {  Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -7,7 +7,7 @@ import { confirmModalData, IUser, officeDays, selectedUserInputField } from '../
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { DataServiceService } from '../Services/data-service.service';
 import { SelectUserInputComponent } from '../select-user-input/select-user-input.component';
-import { forkJoin, map } from 'rxjs';
+import { forkJoin, map, Subscription } from 'rxjs';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 import { CommonModule } from '@angular/common';
 
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   standalone:true,
   imports: [FullCalendarModule, SelectUserInputComponent, ConfirmModalComponent, CommonModule],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   dates: officeDays[] = [];
   calendarOptions!: CalendarOptions;
   selectedUsers: selectedUserInputField[] = [];
@@ -29,6 +29,10 @@ export class CalendarComponent implements OnInit {
   events: EventInput[] = [];
   myDaysThisMonth:number =0;
   monthlyData!: { month: string; daysInOffice: number; status: string; }[];
+  userSubscription$!:Subscription
+  selectedUserSubscription$!:Subscription
+  deleteUser$!:Subscription
+  addUser$!:Subscription
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
@@ -36,7 +40,7 @@ export class CalendarComponent implements OnInit {
     let myUID = localStorage.getItem("u_id") as string
     //console.log(myUID);
    
-    this.userInfoService.getOneUserDays(myUID).subscribe(
+    this.userSubscription$= this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
         this.dates = data;
       // console.log(data);
@@ -50,6 +54,8 @@ export class CalendarComponent implements OnInit {
             end: date.end_date.toString() || date.start_date.toString(), // Set end date to same as start date by default
             id:date.id,
             allDay: true,
+            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode("meaee")),
+            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode("meaee"))
           }
         this.events.push(newEvent); // Push the newly created event object
       }
@@ -83,7 +89,7 @@ export class CalendarComponent implements OnInit {
 
       };
    
-    this.dataservice.selectedUsers$.subscribe(users => {
+      this.selectedUserSubscription$= this.dataservice.selectedUsers$.subscribe(users => {
       this.selectedUsers = users;
       this.updateCalendarEvents(users,this.events);      
       console.log(this.selectedUsers);
@@ -119,7 +125,7 @@ export class CalendarComponent implements OnInit {
     this.confirmModalData={numberOfDatesSelected,dateSelected:info.startStr}
     this.openModal()
     this.datesSelected=info
-   
+    //BUG Big bug:don't allow if event already esists in the same day
   }
 
   refreshInOfficeToday() {
@@ -145,6 +151,8 @@ export class CalendarComponent implements OnInit {
             start: date.start_date.toString(),
             end: date.end_date.toString() || date.start_date.toString(),
             allDay: true,
+            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username.split(" ", 1)[0]as string)),
+            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username.split(" ", 1)[0]as string))
           }));
           return userEvents;
         })
@@ -184,7 +192,7 @@ export class CalendarComponent implements OnInit {
       start_date: info.startStr,
       end_date:info.endStr || info.startStr
     }
-    this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
+    this.addUser$= this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
       console.log(response);
       this.refreshInOfficeToday()
     },
@@ -209,7 +217,7 @@ export class CalendarComponent implements OnInit {
       if (start< nowDate){
         alert("can't edit previous dates") //TODO: make into a good error message
       }else{
-        this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
+        this.deleteUser$ =this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
           (data)=>{
           //  console.log(data.message); //TODO: fix this, get the actual message, remove only if delete was successfull
             
@@ -263,5 +271,11 @@ export class CalendarComponent implements OnInit {
     var index:number = this.monthlyData.findIndex((element)=>{return element.month==`${thisMonth} ${thisYear}`;})
     this.myDaysThisMonth = this.monthlyData[index].daysInOffice  
   }
-
+  ngOnDestroy(): void {
+    //TODO: How do I do this?
+      // this.userSubscription$.unsubscribe()
+      // this.selectedUserSubscription$.unsubscribe()
+      // this.deleteUser$.unsubscribe()
+      // this.addUser$.unsubscribe()
+  }
 }

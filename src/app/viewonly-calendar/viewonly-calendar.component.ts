@@ -41,7 +41,9 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
             title: date.first_name,
             start: date.start_date,
             end: date.end_date,
-            allDay: true
+            allDay: true,
+            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode(date.first_name as string)),
+            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode(date.first_name as string))
           }));
           this.calendarOptions.events = events;
           // To trigger change detection if needed
@@ -73,4 +75,6 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
       
     };
   }
+
+   
 }

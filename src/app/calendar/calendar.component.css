@@ -35,7 +35,7 @@
     font-weight: 600;
   }
   .green{
-    color: var(--main-success);
+    color: green;
     font-weight: 600;
   }
   .blue-text{

@@ -29,8 +29,6 @@ export class ConfirmModalComponent implements OnInit {
       const selectedDate = this.data.dateSelected as string;
       this.noBookedThisDate$ = this.userService.getCountOfUsersByDate(selectedDate);
       this.noMaximumBooked$ = this.userService.getMaxSeatsBySubteam(this.subteam_id);
-      console.log(this.noBookedThisDate$.subscribe((data)=>console.log(data) ));
-      console.log(this.noMaximumBooked$.subscribe((data)=>console.log(data) ));
       
     }
   }

@@ -46,7 +46,7 @@ export class ResetPasswordComponent {
     },
     error => {
       //console.log(error.error.error); //to get msg as string
-      this.errorMsg= 'Invalid username or password'
+      this.errorMsg= error.error.error
       setTimeout(() => {
         this.errorMsg=null
       }, 1000);

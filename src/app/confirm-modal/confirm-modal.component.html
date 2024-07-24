@@ -8,7 +8,7 @@
         </div>
         <p>
           <span>{{ (noMaximumBooked$ | async)!  - (noBookedThisDate$ | async)! }}</span>
-          seats available on this date
+          seats available
         </p>
       </div>
       <p *ngIf="data.numberOfDatesSelected < 3">{{ oneDateSentence }}</p>
