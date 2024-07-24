@@ -34,7 +34,7 @@
     <div class="progress-container">
       <div class="progress-bar" [style.width]="progress + '%'"></div>
     </div>
-    <p> <span>{{ totalSeats-users.length }}</span> of {{ totalSeats }} seats remaining</p>
+    <p> <span>{{ (totalSeats-users.length) >0? (totalSeats-users.length):0 }}</span> of {{ totalSeats }} seats remaining</p>
   </div>
 </div>
   

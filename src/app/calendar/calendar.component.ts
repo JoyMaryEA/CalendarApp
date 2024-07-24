@@ -257,7 +257,11 @@ export class CalendarComponent implements OnInit {
       daysInOffice,
       status: daysInOffice >= 10 ? 'Complete' : 'Incomplete'
     })); 
-    this.myDaysThisMonth = this.monthlyData[0].daysInOffice  
+    var today = new Date()
+    var thisYear = new Date().getFullYear()
+    const thisMonth = today.toLocaleString('default', { month: 'long' });
+    var index:number = this.monthlyData.findIndex((element)=>{return element.month==`${thisMonth} ${thisYear}`;})
+    this.myDaysThisMonth = this.monthlyData[index].daysInOffice  
   }
 
 }

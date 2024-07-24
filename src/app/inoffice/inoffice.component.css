@@ -59,8 +59,8 @@
   font-size: 1.2em;
   color: #555;
 }
-.office-capacity, .in-office{
-  height: 50%;
+.office-capacity{
+  height: 40%;
 }
 .office-capacity{
   display: flex;
@@ -70,7 +70,7 @@
 }
 
 .progress-container {
-  width: 90%;
+  width: 70%;
   background-color: #f3f3f3;
  
 }
@@ -81,7 +81,8 @@
   background-color: green;
   transition: width 0.5s;
 }
-.users-list{
+.in-office{
+  height: 60%;
   overflow: scroll;
 }
 .username-title{
