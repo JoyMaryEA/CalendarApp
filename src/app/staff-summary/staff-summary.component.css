@@ -37,3 +37,10 @@
     font-size: 16px;
     color: var(--main-navy-blue);
 }
+.username-title{
+    padding: 1.5rem;
+    border-radius: 50%;
+    font-size: 16px;
+    background: var(--main-navy-blue);
+    color: white;
+  }

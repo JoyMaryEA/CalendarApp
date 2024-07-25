@@ -3,7 +3,7 @@
 
 <div *ngFor="let user of users">
     <div class="card" (click)="openModal(user)">
-        <img [src]="getAvatarUrl(user.first_name + user.last_name)" alt="Avatar" class="avatar">
+        <p class="username-title">{{user.first_name.charAt(0)+ user.last_name?.charAt(0)}}</p>
         <span class="name">{{user.first_name + ' ' + user.last_name}}</span>
         <p id="u_id" style="display: none;">{{user.u_id}}</p>
     </div>
