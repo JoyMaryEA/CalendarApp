@@ -155,8 +155,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
             start: date.start_date.toString(),
             end: date.end_date.toString() || date.start_date.toString(),
             allDay: true,
-            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.u_id as string)),
-            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.u_id as string))
+            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username as string)),
+            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username as string))
           }));
           return userEvents;
         })
