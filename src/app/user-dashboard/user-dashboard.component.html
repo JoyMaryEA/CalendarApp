@@ -10,7 +10,7 @@
           <!-- BUG: teeny tiny bug below: the active button does not correspond to actual button,(summary in office days and officedays in summary) it works as is though, DO NOT TOUCH :) -->
         <button class="btn bt-logout card-sm space-gap" [ngClass]="{'active': activeButton === 'summary'}" (click)="showStaffOfficeDays()"><span class="material-icons">calendar_month</span> Staff office days</button>
         <button class="btn bt-logout card-sm space-gap" [ngClass]="{'active': activeButton === 'myOfficeDates'}"(click)="showOfficeDates()"> <span class="material-icons">today</span>My office days</button>
-        <button class="btn bt-logout card-sm space-gap" [ngClass]="{'active': activeButton === 'officeDays'}"(click)="showStaffSummary()" *ngIf="role>1"><span class="material-icons">summarize</span> Staff Summary</button>
+        <button class="btn bt-logout card-sm space-gap" [ngClass]="{'active': activeButton === 'officeDays'}"(click)="showStaffSummary()" *ngIf="role>3"><span class="material-icons">summarize</span> Staff Summary</button>
         <button class="btn bt-logout card-sm space-gap" (click)="logout()" ><span class="material-icons">logout</span> Logout</button>
     </ul>
   

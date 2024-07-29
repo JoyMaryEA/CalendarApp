@@ -16,6 +16,12 @@ export class DataServiceService {
 
   private selectedUsersSubject = new BehaviorSubject<selectedUserInputField[]>([]);
   selectedUsers$ = this.selectedUsersSubject.asObservable();
+
+  private myDaysInOfficeSubject = new BehaviorSubject<number>(0);
+  myDaysInOffice$ = this.myDaysInOfficeSubject.asObservable();
+
+  private teamSelectedSubject = new BehaviorSubject<number>(0);
+  teamSelected$ = this.teamSelectedSubject.asObservable();
   
   triggerRefresh() {
     this.refreshSource.next();
@@ -25,6 +31,12 @@ export class DataServiceService {
   }
   setSummaryView(){
     this.componentToggleSubject.next(View.Summary);
+  }
+  setMyDaysInOffice(days:number){
+    this.myDaysInOfficeSubject.next(days);
+  }
+  setTeamSelected(team_id:number){
+    this.myDaysInOfficeSubject.next(team_id);
   }
   setMyOfficeDatesView(){
     this.componentToggleSubject.next(View.MyOfficeDates);

@@ -36,14 +36,14 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
     if (this.data) {
       var team_id=localStorage.getItem("team_id") as string;
       this.userInfoService.getTeamUserDays(team_id).subscribe(
-        (data: officeDays[]) => {
+        (data: officeDays[]) => {          
           const events = data.map((date) => ({
-            title: date.first_name,
+            title: date.first_name ,
             start: date.start_date,
             end: date.end_date,
             allDay: true,
-            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode(date.first_name as string)),
-            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode(date.first_name as string))
+            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode(date.first_name+date.last_name! as string)),
+            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode(date.first_name+date.last_name! as string))
           }));
           this.calendarOptions.events = events;
           // To trigger change detection if needed

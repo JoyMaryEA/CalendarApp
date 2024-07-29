@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffModalComponent } from '../staff-modal/staff-modal.component';
-import { Imanager, IUser } from '../Interfaces';
+import { Imanager, IUser, team } from '../Interfaces';
 import { UserInfoService } from '../Services/user-info.service';
+import { DataServiceService } from '../Services/data-service.service';
 
 @Component({
   selector: 'app-staff-summary',
@@ -16,29 +17,36 @@ export class StaffSummaryComponent implements OnInit{
   @ViewChild('container') cardContainer!: ElementRef;
   users!: IUser[];
   showModal:boolean =false;
-  selectedUser!: IUser;
+  selectedUser!: IUser[];
+  managerTeam:{team_id:number,team_name:string}[]=[]
+  team:team[]= [
+    { team_id: 4, team_name: 'IS' },
+    { team_id: 1, team_name: 'PDM' },
+    { team_id: 2, team_name: 'PDA' },
+    { team_id: 3, team_name: 'PDL' }
+  ];
+  selectedTeamId!:number
 
-  constructor(private renderer: Renderer2, private userInfoService:UserInfoService) {}
+  constructor(private renderer: Renderer2, private dataService:DataServiceService) {}
  
   ngOnInit(): void {
     var managerLoggedIn:Imanager ={role:parseInt(localStorage.getItem('role') as string), team_id:parseInt(localStorage.getItem('team_id') as string)}
    
-    this.userInfoService.getStaffSummaryData(managerLoggedIn).subscribe(
-      (data: IUser[]) => {
-        console.log(data);
-        
-        this.users = data;
-      },
-      (error: any) => {
-        console.error('Error fetching users', error);
-      }
-    );
+    if (managerLoggedIn.role<5){
+      this.managerTeam.push(this.team.find((element)=> element.team_id==managerLoggedIn.team_id) as team)
+    }else{
+      this.managerTeam=this.team
+    }
+   console.log(this.managerTeam);
+   
     
   }
-
-  openModal(user:IUser): void {
-    this.selectedUser = user;
+  //TODO: make showModal false
+  openModal(team_id:number): void {
+    this.dataService.setTeamSelected(team_id);
+    this.selectedTeamId=team_id
     this.showModal = true; 
+    
   }
 
   getAvatarUrl(userName:string): string {

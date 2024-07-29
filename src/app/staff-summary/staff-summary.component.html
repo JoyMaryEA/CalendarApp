@@ -1,15 +1,14 @@
 
 <div class="container" #container>
 
-<div *ngFor="let user of users">
-    <div class="card" (click)="openModal(user)">
-        <p class="username-title">{{user.first_name.charAt(0)+ user.last_name?.charAt(0)}}</p>
-        <span class="name">{{user.first_name + ' ' + user.last_name}}</span>
-        <p id="u_id" style="display: none;">{{user.u_id}}</p>
+<div *ngFor="let team of managerTeam">
+    <div class="card" (click)="openModal(team.team_id)">
+        <p class="username-title">{{team.team_name}}</p>
+        <span class="name">{{team.team_name}}</span>
     </div>
 </div>
 <!-- data is @input in staff modal component, hence allowing us to pass user information there for display  -->
-<app-staff-modal *ngIf="showModal" [data]="selectedUser"></app-staff-modal>
+<app-staff-modal *ngIf="showModal" [data]="selectedTeamId"></app-staff-modal>
  
 
 </div>  

@@ -33,6 +33,8 @@ export interface officeDays{
   end_date:string,
   color?:string,
   first_name?:string
+  last_name?:string
+  u_id?:string
   
 }
 export interface calendarEvent{
@@ -61,3 +63,5 @@ export interface confirmModalData{
   numberOfDatesSelected:number, 
   dateSelected:string
 }
+
+export interface team {team_id:number,team_name:string}

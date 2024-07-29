@@ -1,4 +1,4 @@
-import {  Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {  Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -27,19 +27,22 @@ export class CalendarComponent implements OnInit, OnDestroy {
   datesSelected!: { startStr: string; endStr: string; } 
   confirmModalData!:confirmModalData
   events: EventInput[] = [];
-  myDaysThisMonth:number =0;
   monthlyData!: { month: string; daysInOffice: number; status: string; }[];
   userSubscription$!:Subscription
   selectedUserSubscription$!:Subscription
   deleteUser$!:Subscription
   addUser$!:Subscription
+  today = new Date()
+  thisYear = new Date().getFullYear()
+  thisMonth = this.today.toLocaleString('default', { month: 'long' });
+  myDays!:number
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
   ngOnInit() {
     let myUID = localStorage.getItem("u_id") as string
     //console.log(myUID);
-   
+    this.dataservice.myDaysInOffice$.subscribe(days => this.myDays = days);
     this.userSubscription$= this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
         this.dates = data;
@@ -151,8 +154,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
             start: date.start_date.toString(),
             end: date.end_date.toString() || date.start_date.toString(),
             allDay: true,
-            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username.split(" ", 1)[0]as string)),
-            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username.split(" ", 1)[0]as string))
+            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.u_id as string)),
+            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.u_id as string))
           }));
           return userEvents;
         })
@@ -171,9 +174,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
         ...this.calendarOptions,
         events: [...events] // Ensure immutability, to detect change and update
       };
-  
+      
     });
-    this.calculateMonthlyData()
+    this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length)
+    console.log(this.events.filter(event => event.title === 'me').length);
   }
   
   openModal(): void {
@@ -195,6 +199,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.addUser$= this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
       console.log(response);
       this.refreshInOfficeToday()
+      this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length)
     },
     error => {
       console.log(error.error.error); //to get msg as string
@@ -206,12 +211,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
       ...(this.calendarOptions.events as EventInput[]),
       newEvent
     ];
-  
+   
   }
 
   deleteEvent(info:any){
     if(info.event.title ==='me'){ //TODO:change to add check in token to confirm if it is your day
-      // console.log(info.event.id);
+     // console.log(info.event.id);
       const start = new Date(info.event.start);
       var nowDate = new Date()
       if (start< nowDate){
@@ -224,14 +229,17 @@ export class CalendarComponent implements OnInit, OnDestroy {
           const eventIndex = this.events.findIndex(event => event.id === info.event.id);
           if (eventIndex !== -1) {
             this.events.splice(eventIndex, 1); // Remove 1 element at the found index
-            this.updateCalendarEvents(this.selectedUsers, this.events)
+            this.updateCalendarEvents(this.selectedUsers, this.events)            
+            this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length -1)//cause 1 event is deleted
+            
           }
+          
           }
         )
       }
       
     }else{
-      alert('not me')
+     // alert('not me')
     }
   }
 
@@ -265,11 +273,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
       daysInOffice,
       status: daysInOffice >= 10 ? 'Complete' : 'Incomplete'
     })); 
-    var today = new Date()
-    var thisYear = new Date().getFullYear()
-    const thisMonth = today.toLocaleString('default', { month: 'long' });
-    var index:number = this.monthlyData.findIndex((element)=>{return element.month==`${thisMonth} ${thisYear}`;})
-    this.myDaysThisMonth = this.monthlyData[index].daysInOffice  
+    var index:number = this.monthlyData.findIndex((element)=>{return element.month==`${this.thisMonth} ${this.thisYear}`;})
+    this.dataservice.setMyDaysInOffice(this.monthlyData[index].daysInOffice)
   }
   ngOnDestroy(): void {
     //TODO: How do I do this?
