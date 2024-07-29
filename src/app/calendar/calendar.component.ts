@@ -42,7 +42,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     let myUID = localStorage.getItem("u_id") as string
     //console.log(myUID);
-    this.dataservice.myDaysInOffice$.subscribe(days => this.myDays = days);
+    this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; console.log(days)}
+    );
     this.userSubscription$= this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
         this.dates = data;
@@ -200,6 +201,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       console.log(response);
       this.refreshInOfficeToday()
       this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length)
+      this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; console.log(days)});
     },
     error => {
       console.log(error.error.error); //to get msg as string
@@ -230,7 +232,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           if (eventIndex !== -1) {
             this.events.splice(eventIndex, 1); // Remove 1 element at the found index
             this.updateCalendarEvents(this.selectedUsers, this.events)            
-            this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length -1)//cause 1 event is deleted
+            this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; console.log(days)});
             
           }
           
@@ -282,5 +284,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
       // this.selectedUserSubscription$.unsubscribe()
       // this.deleteUser$.unsubscribe()
       // this.addUser$.unsubscribe()
+  }
+  getFirstAndLastDayOfMonth(date: Date = new Date()): { start_date: string, end_date: string, u_id: string } {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Pad month with leading zero
+  
+    const firstDayOfMonth = `${year}-${month}-01`;
+    const lastDayOfMonth = new Date(year, date.getMonth() + 1, 0).toISOString().split('T')[0];
+    const u_id = localStorage.getItem("u_id") as string;
+    console.log(firstDayOfMonth, lastDayOfMonth);
+    
+    return { start_date: firstDayOfMonth, end_date: lastDayOfMonth, u_id };
   }
 }

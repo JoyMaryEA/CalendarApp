@@ -56,6 +56,18 @@ export class UserInfoService {
       }
     );
   }
+  getUserDaysInPeriod(details:{u_id:string,start_date:string,end_date:string}):Observable<IUser[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
+    return this.http.post<IUser[]>(
+      this.baseURL+'users/period',
+      {
+        u_id:details.u_id,start_date:details.start_date,end_date:details.end_date
+      },
+      {
+        headers
+      }
+    );
+  }
   deleteOfficeDays(id:string){
     const headers  = new HttpHeaders({ 'Content-Type': 'application/json', 'token':localStorage.getItem('token') as string  });
     return this.http.delete<SuccessMessages>(this.baseURL + 'users/'+id,{ headers });
