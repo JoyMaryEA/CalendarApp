@@ -86,15 +86,13 @@ tr:nth-child(even) {
 
 button {
   padding: 5px 10px;
-  background-color: #4CAF50;
+  background-color: var(--main-navy-blue);
   color: white;
   border: none;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #45a049;
-}
+
 
 
 .complete {
@@ -105,4 +103,27 @@ button:hover {
 .incomplete {
   color: red;
   font-weight: bold;
+}
+
+select{
+  height: 2rem;
+}
+
+form{
+  display: flex;
+  gap: 1rem;
+  padding: .2rem 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--main-navy-blue);
+  width: 80%;
+}
+
+.title{
+  font-size: 14px;
+  font-weight: 800;
+  padding: .2rem 1rem;
+}
+
+.noDetails{
+  margin-top: 2rem;
 }

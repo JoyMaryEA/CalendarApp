@@ -1,7 +1,9 @@
 <div class="modal" *ngIf="data">
     <div class="modal-content">
       <span class="close" (click)="closeModal()">&times;</span>
+      <p class="title">Select time period:</p>
       <form (ngSubmit)="onSubmit()" #monthYearForm="ngForm">
+    
         <select name="year" id="year" [(ngModel)]="selectedYear" required>
           <option value="2024">2024</option>
           <option value="2025">2025</option>
@@ -42,7 +44,7 @@
           </tr>
         </tbody>
       </table>
-      <ng-template #noDetails>
+      <ng-template #noDetails class="noDetails">
         <p>No details available for {{ selectedMonth }} {{ selectedYear }}</p>
       </ng-template>
     </div>

@@ -27,7 +27,7 @@ export class StaffModalComponent implements OnInit {
 
   ngOnInit(): void {
     
-    var managerLoggedIn:Imanager ={role:parseInt(localStorage.getItem('role') as string), team_id:parseInt(localStorage.getItem('team_id') as string)}
+  
     this.dataService.teamSelected$.subscribe(
       (data) => {
           this.team_id = data;
@@ -48,10 +48,11 @@ export class StaffModalComponent implements OnInit {
     }
   }
   fetchTeamUserDays(team_id:string){
+    var managerLoggedIn:Imanager ={role:parseInt(localStorage.getItem('role') as string), team_id:parseInt(team_id)}
     this.userDates = [];
     this.monthMap.clear();
     this.monthlyData = [];
-    this.userInfoService.getTeamUserDays(team_id).subscribe(
+    this.userInfoService.getStaffSummaryData(managerLoggedIn).subscribe(
       (data: IUser[]) => {       
         console.log(data);
          
