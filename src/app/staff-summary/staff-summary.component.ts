@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffModalComponent } from '../staff-modal/staff-modal.component';
 import { Imanager, IUser, team } from '../Interfaces';
@@ -12,7 +12,7 @@ import { DataServiceService } from '../Services/data-service.service';
   templateUrl: './staff-summary.component.html',
   styleUrls: ['./staff-summary.component.css'],
 })
-export class StaffSummaryComponent implements OnInit{
+export class StaffSummaryComponent implements OnInit, OnChanges{
   @ViewChild(StaffModalComponent) modal!: StaffModalComponent;
   @ViewChild('container') cardContainer!: ElementRef;
   users!: IUser[];
@@ -28,10 +28,15 @@ export class StaffSummaryComponent implements OnInit{
   selectedTeamId!:number
 
   constructor(private renderer: Renderer2, private dataService:DataServiceService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    // if (changes['showModal'] && this.showModal !== null) {
+    //   this.dataService.showModal$.subscribe(value=>this.showModal=value)
+    // }
+  }
  
   ngOnInit(): void {
     var managerLoggedIn:Imanager ={role:parseInt(localStorage.getItem('role') as string), team_id:parseInt(localStorage.getItem('team_id') as string)}
-   
+    this.dataService.showModal$.subscribe(value=>this.showModal=value)
     if (managerLoggedIn.role<5){
       this.managerTeam.push(this.team.find((element)=> element.team_id==managerLoggedIn.team_id) as team)
     }else{
@@ -41,11 +46,12 @@ export class StaffSummaryComponent implements OnInit{
    
     
   }
+  
   //TODO: make showModal false
   openModal(team_id:number): void {
     this.dataService.setTeamSelected(team_id);
     this.selectedTeamId=team_id
-    this.showModal = true; 
+    this.dataService.setShowModal(true)
     
   }
 

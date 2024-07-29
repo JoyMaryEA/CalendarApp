@@ -148,7 +148,7 @@ export class StaffModalComponent implements OnInit {
   
   closeModal(): void {
     this.data = null; // closes modal because open modal is if (data)
-   // this.userDates=[]
+    this.dataService.setShowModal(false)
   }
 
   getAvatarUrl(userName: string): string {

@@ -22,6 +22,11 @@ export class DataServiceService {
 
   private teamSelectedSubject = new BehaviorSubject<number>(0);
   teamSelected$ = this.teamSelectedSubject.asObservable();
+
+  
+  private showModalSubject = new BehaviorSubject<boolean>(false);
+  showModal$ = this.showModalSubject.asObservable();
+  
   
   triggerRefresh() {
     this.refreshSource.next();
@@ -37,6 +42,9 @@ export class DataServiceService {
   }
   setTeamSelected(team_id:number){
     this.myDaysInOfficeSubject.next(team_id);
+  }
+  setShowModal(show:boolean){
+    this.showModalSubject.next(show);
   }
   setMyOfficeDatesView(){
     this.componentToggleSubject.next(View.MyOfficeDates);
