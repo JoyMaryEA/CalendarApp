@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { confirmModalData } from '../Interfaces';
 import { UserInfoService } from '../Services/user-info.service';
@@ -11,7 +11,7 @@ import { Observable, combineLatest, map } from 'rxjs';
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.css']
 })
-export class ConfirmModalComponent implements OnInit {
+export class ConfirmModalComponent implements OnInit , OnChanges{
   @Input() data: confirmModalData | null = null;
   @Output() buttonClicked: EventEmitter<void> = new EventEmitter<void>();
   manyDatesSentence: string = "Are you sure you want to book these dates?";
@@ -30,6 +30,13 @@ export class ConfirmModalComponent implements OnInit {
       this.noBookedThisDate$ = this.userService.getCountOfUsersByDate(selectedDate);
       this.noMaximumBooked$ = this.userService.getMaxSeatsBySubteam(this.subteam_id);
       
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && this.data !== null) {
+      const selectedDate = this.data.dateSelected as string;
+      this.noBookedThisDate$ = this.userService.getCountOfUsersByDate(selectedDate);
     }
   }
 
