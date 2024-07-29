@@ -23,6 +23,8 @@ export class UserDashboardComponent implements OnInit{
   logout(){
     localStorage.clear()
     this.router.navigate(['/login']);
+    this.view = 'officeDays';
+    this.dataService.setSummaryView()
   }
  
   ngOnInit(): void {
