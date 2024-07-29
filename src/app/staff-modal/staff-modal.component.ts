@@ -84,7 +84,7 @@ export class StaffModalComponent implements OnInit {
   
       const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); //removed adding start day because the end date should be -1
-      //BUG: If Ii fix the db enddate to be exact date please add +1 to diffDays calculation
+      //BUG: If I fix the db enddate to be exact date please add +1 to diffDays calculation
   
       if (!this.monthMap.get(startMonthKey)!.has(u_id as string)) {
         this.monthMap.get(startMonthKey)!.set(u_id as string, { username, days: 0 });

@@ -19,7 +19,12 @@
   .fc-view-harness, .fc-view-harness-active{ 
       min-height: 500px;
   }
-
+ .fc-scrollgrid-sync-table, .fc-daygrid-body ,.fc-daygrid-body-unbalanced, .fc-daygrid-body-natural ,fc-daygrid-body fc-daygrid-body-unbalanced fc-daygrid-body-natural{
+  width: 100%;
+ }
+  #calendarviewonly .fc-view-harness fc-view-harness-active{
+    height: 50%;
+  }
   .fc-event {
    width: max-content;
   }

@@ -40,14 +40,13 @@ export class StaffSummaryComponent implements OnInit, OnChanges{
     if (managerLoggedIn.role<5){
       this.managerTeam.push(this.team.find((element)=> element.team_id==managerLoggedIn.team_id) as team)
     }else{
-      this.managerTeam=this.team
+      this.managerTeam=this.team //TODO: Get this from the database? instead of this array
     }
    console.log(this.managerTeam);
    
     
   }
   
-  //TODO: make showModal false
   openModal(team_id:number): void {
     this.dataService.setTeamSelected(team_id);
     this.selectedTeamId=team_id

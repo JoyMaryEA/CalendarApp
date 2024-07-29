@@ -3,7 +3,7 @@
       <span class="close" (click)="closeModal()">&times;</span>
       <p class="title">Select time period:</p>
       <form (ngSubmit)="onSubmit()" #monthYearForm="ngForm">
-    
+    <!-- TODO: Scroll through months instead -->
         <select name="year" id="year" [(ngModel)]="selectedYear" required>
           <option value="2024">2024</option>
           <option value="2025">2025</option>
@@ -39,7 +39,7 @@
         <tbody>
           <tr *ngFor="let item of details">
             <td>{{ item.username }}</td>
-            <td>{{ item.days }}</td>
+            <td>{{ item.days }} out of 10</td>
             <td [ngClass]="{'complete': item.status === 'Complete', 'incomplete': item.status === 'Incomplete'}">{{ item.status }}</td>
           </tr>
         </tbody>
