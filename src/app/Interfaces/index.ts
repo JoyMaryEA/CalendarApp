@@ -1,4 +1,5 @@
 export interface IUser {
+count?: number
    
 color:string,
 email?:string,

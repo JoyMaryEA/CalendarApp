@@ -42,7 +42,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     let myUID = localStorage.getItem("u_id") as string
     //console.log(myUID);
-    this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; console.log(days)}
+    this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days[0].count!; console.log(days)}
     );
     this.userSubscription$= this.userInfoService.getOneUserDays(myUID).subscribe(
       (data: IUser[]) => {
@@ -235,7 +235,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
       // Get and update the user's days in the current period
       this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe(
-        (days) => { this.myDays = days.length; }
+        (days) => { this.myDays = days[0].count!; }
       );
 
       // Update the events array immutably
@@ -260,29 +260,31 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
 
   deleteEvent(info:any){
-    if(info.event.title ==='me'){ //TODO:change to add check in token to confirm if it is your day
+    if(info.event.title ==='me'){ 
      // console.log(info.event.id);
       const start = new Date(info.event.start);
       var nowDate = new Date()
       if (start< nowDate){
-        alert("can't edit previous dates") //TODO: make into a good error message
+        alert("Deleting dates that have passed is not allowed") 
       }else{
         this.deleteUser$ =this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
           (data)=>{
-          //  console.log(data.message); //TODO: fix this, get the actual message, remove only if delete was successfull
-            
-          const eventIndex = this.events.findIndex(event => event.id == info.event.id);
-         // console.log(eventIndex);
-          
-          if (eventIndex !== -1) {
-            this.events.splice(eventIndex, 1); // Remove 1 element at the found index
-            console.log(this.events);
-               // Update the calendar events
-            this.calendarOptions.events = [...this.events];       
-            this.updateCalendarEvents(this.selectedUsers, this.events)     
-            this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; });
-            
-          }
+           console.log(data.message);
+            if(data.message){
+              const eventIndex = this.events.findIndex(event => event.id == info.event.id);
+              // console.log(eventIndex);
+               
+               if (eventIndex !== -1) {
+                 this.events.splice(eventIndex, 1); // Remove 1 element at the found index
+                 console.log(this.events);
+                    // Update the calendar events
+                 this.calendarOptions.events = [...this.events];       
+                 this.updateCalendarEvents(this.selectedUsers, this.events)     
+                 this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays =  days[0].count!; });
+                 
+               }
+            }
+        
           
           }
         )
@@ -327,7 +329,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.dataservice.setMyDaysInOffice(this.monthlyData[index].daysInOffice)
   }
   ngOnDestroy(): void {
-    //TODO: How do I do this?
       // this.userSubscription$.unsubscribe()
       // this.selectedUserSubscription$.unsubscribe()
       // this.deleteUser$.unsubscribe()
@@ -338,10 +339,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Pad month with leading zero
   
     const firstDayOfMonth = `${year}-${month}-01`;
-    const lastDayOfMonth = new Date(year, date.getMonth() + 1, 0).toISOString().split('T')[0];
+    const lastDayOfMonth = new Date(year, date.getMonth() + 1, 0)
+                            .toLocaleDateString('en-CA'); // Format as 'YYYY-MM-DD'
+    
     const u_id = localStorage.getItem("u_id") as string;
-   // console.log(firstDayOfMonth, lastDayOfMonth);
     
     return { start_date: firstDayOfMonth, end_date: lastDayOfMonth, u_id };
-  }
+}
+
 }
