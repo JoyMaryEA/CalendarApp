@@ -28,12 +28,13 @@ export class ResetPasswordComponent {
     this.loginService.resetPassword({email:email.value, password:password.value}).subscribe( response => {
       console.log(response.success);
       if(response.success) {
+         this.errorMsg="Password reset successful. Taking you back to login.."
         setTimeout(() => {
-          this.errorMsg="Password reset successful. Taking you back to login.."
+         this.errorMsg=null;
           this.router.navigate(['/login'])
-           setTimeout(()=>{
-            this.errorMsg=null
-           },1000)
+          //  setTimeout(()=>{
+          //   this.errorMsg=null
+          //  },1000)
         }, 2000);
        
       }else{
@@ -56,7 +57,7 @@ export class ResetPasswordComponent {
     this.router.navigate(["/login"])
   }
   getClass(errorMsg:string){
-    if(errorMsg.includes('success')){
+    if(errorMsg.includes('successful')){
       return "success-color"
     }else return "error-color"
   }

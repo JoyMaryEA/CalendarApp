@@ -96,13 +96,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.selectedUserSubscription$= this.dataservice.selectedUsers$.subscribe(users => {
       this.selectedUsers = users;
       this.updateCalendarEvents(users,this.events);      
-      console.log(this.selectedUsers);
+    //  console.log(this.selectedUsers);
       
     });
     
   }
  
-   //BUG Big bug, do the insert office days then pick a user, the update is buggy
   selectAllow(selectInfo:any) {
     const start = new Date(selectInfo.start);
     const end = new Date(selectInfo.end);
@@ -114,8 +113,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
       
     }
     var nowDate = new Date()
-    if (start<= nowDate) return false;
+   if (start<= nowDate) return false;
     //TODO:error message saying this date has passed selecting chances
+   
+  
     return true
     //return start >= this.getDateWithoutTime(new Date());
   }
@@ -178,43 +179,85 @@ export class CalendarComponent implements OnInit, OnDestroy {
       
     });
     this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length)
-    console.log(this.events.filter(event => event.title === 'me').length);
+  //  console.log(this.events.filter(event => event.title === 'me').length);
   }
   
   openModal(): void {
     this.showModal = true; 
   }
 
+  isDateAlreadyBooked(info:any){
+         // Check if there is an existing event with the title "me"
+         for (let event of this.events) {
+          const eventStart = new Date(event.start as string);
+          const eventEnd = new Date(event.end as string|| event.start as string); // Handle events with no end date
+    
+          if (event.title === 'me' && ((new Date(info.startStr) >= eventStart && new Date(info.startStr) < eventEnd) || (new Date(info.endStr) > eventStart && new Date(info.endStr) <= eventEnd) || (new Date(info.startStr) < eventStart && new Date(info.endStr) > eventEnd))) {
+              // TODO: error message saying "You already have an event on this date"
+              return false;
+          }else return true
+      }
+      return true
+  }
+
   onModalButtonClick(){
     var info = this.datesSelected;
     this.showModal = false; 
+
+    // Create the newEvent object
     const newEvent: EventInput = {
       title: "me",
       start: info.startStr,
       end: info.endStr || info.startStr
     };
-    var officeDays:officeDays ={
+
+    // Create the officeDays object
+    var officeDays: officeDays = {
       start_date: info.startStr,
-      end_date:info.endStr || info.startStr
-    }
-    this.addUser$= this.userInfoService.addUserOfficeDays(officeDays).subscribe( response => {
-      console.log(response);
-      this.refreshInOfficeToday()
-      this.dataservice.setMyDaysInOffice(this.events.filter(event => event.title === 'me').length)
-      this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; console.log(days)});
+      end_date: info.endStr || info.startStr
+    };
+
+   
+    if(this.isDateAlreadyBooked(info)){
+  // Subscribe to addUserOfficeDays
+  this.addUser$ = this.userInfoService.addUserOfficeDays(officeDays).subscribe(
+    response => {
+      // Set the newEvent ID from the server response
+      newEvent.id = response.newDays!.period_id;
+
+      // Refresh the in-office today data
+      this.refreshInOfficeToday();
+
+      // Update the count of days in office for "me"
+      this.dataservice.setMyDaysInOffice(
+        this.events.filter(event => event.title === 'me').length
+      );
+
+      // Get and update the user's days in the current period
+      this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe(
+        (days) => { this.myDays = days.length; }
+      );
+
+      // Update the events array immutably
+      this.events = [
+        ...(this.events),
+        newEvent
+      ];
+      this.calendarOptions.events = [
+        ...(this.calendarOptions.events as EventInput[]),
+        newEvent
+      ];
     },
     error => {
-      console.log(error.error.error); //to get msg as string
-      
-      
-    })
-    // Update the events array immutably
-    this.calendarOptions.events = [
-      ...(this.calendarOptions.events as EventInput[]),
-      newEvent
-    ];
-   
-  }
+      // Handle the error
+      // console.log(error.error.error); //to get msg as string
+    }
+  );
+    }
+
+  
+}
+
 
   deleteEvent(info:any){
     if(info.event.title ==='me'){ //TODO:change to add check in token to confirm if it is your day
@@ -228,11 +271,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
           (data)=>{
           //  console.log(data.message); //TODO: fix this, get the actual message, remove only if delete was successfull
             
-          const eventIndex = this.events.findIndex(event => event.id === info.event.id);
+          const eventIndex = this.events.findIndex(event => event.id == info.event.id);
+         // console.log(eventIndex);
+          
           if (eventIndex !== -1) {
             this.events.splice(eventIndex, 1); // Remove 1 element at the found index
-            this.updateCalendarEvents(this.selectedUsers, this.events)            
-            this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; console.log(days)});
+            console.log(this.events);
+               // Update the calendar events
+            this.calendarOptions.events = [...this.events];       
+            this.updateCalendarEvents(this.selectedUsers, this.events)     
+            this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays = days.length; });
             
           }
           
@@ -292,7 +340,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     const firstDayOfMonth = `${year}-${month}-01`;
     const lastDayOfMonth = new Date(year, date.getMonth() + 1, 0).toISOString().split('T')[0];
     const u_id = localStorage.getItem("u_id") as string;
-    console.log(firstDayOfMonth, lastDayOfMonth);
+   // console.log(firstDayOfMonth, lastDayOfMonth);
     
     return { start_date: firstDayOfMonth, end_date: lastDayOfMonth, u_id };
   }

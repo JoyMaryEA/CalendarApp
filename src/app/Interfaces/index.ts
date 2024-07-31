@@ -25,7 +25,8 @@ export interface error{
     error:string
 }
 export interface SuccessMessages{
-  success:string
+  success:string,
+  newDays?:any
 }
 export interface officeDays{
   id?: string | undefined

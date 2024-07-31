@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Imanager, IUser, officeDays } from '../Interfaces';
 
 interface SuccessMessages{
+  newDays: any;
   message:string
 }
 @Injectable({
