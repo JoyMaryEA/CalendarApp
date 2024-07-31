@@ -58,8 +58,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
             end: date.end_date.toString() || date.start_date.toString(), // Set end date to same as start date by default
             id:date.id,
             allDay: true,
-            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode("meaee")),
-            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode("meaee"))
+            backgroundColor:"#"+this.getColorOfEvent(date.end_date.toString() || date.start_date.toString(),"meeee"),
+            borderColor:"#"+this.getColorOfEvent(date.end_date.toString() || date.start_date.toString(),"meeee")
           }
         this.events.push(newEvent); // Push the newly created event object
       }
@@ -121,7 +121,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
     //return start >= this.getDateWithoutTime(new Date());
   }
 
-
+  getColorOfEvent(end:string,name:string){
+    if (new Date(end)<this.today){
+      return 'a6a6a6' //gray to mean you cannot edit it
+    }
+    return this.userInfoService.intToRGB(this.userInfoService.hashCode( name))
+  }
   handleDateSelect(info: { startStr: string; endStr: string; }) {
     const startDate = new Date(info.startStr);
     const endDate = new Date(info.endStr);
@@ -147,7 +152,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       };
       return;
     }
-
+    
     const observables = users.map(user =>
       this.userInfoService.getOneUserDays(user.u_id).pipe(
         map((dates: IUser[]) => {
@@ -156,8 +161,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
             start: date.start_date.toString(),
             end: date.end_date.toString() || date.start_date.toString(),
             allDay: true,
-            backgroundColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username as string)),
-            borderColor:"#"+this.userInfoService.intToRGB(this.userInfoService.hashCode( user.username as string))
+            backgroundColor:"#"+this.getColorOfEvent(date.end_date.toString() || date.start_date.toString(),user.username),
+            borderColor:"#"+this.getColorOfEvent(date.end_date.toString() || date.start_date.toString(),user.username)
           }));
           return userEvents;
         })
@@ -219,41 +224,41 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
    
     if(this.isDateAlreadyBooked(info)){
-  // Subscribe to addUserOfficeDays
-  this.addUser$ = this.userInfoService.addUserOfficeDays(officeDays).subscribe(
-    response => {
-      // Set the newEvent ID from the server response
-      newEvent.id = response.newDays!.period_id;
+        // Subscribe to addUserOfficeDays
+        this.addUser$ = this.userInfoService.addUserOfficeDays(officeDays).subscribe(
+          response => {
+            // Set the newEvent ID from the server response
+            newEvent.id = response.newDays!.period_id;
 
-      // Refresh the in-office today data
-      this.refreshInOfficeToday();
+            // Refresh the in-office today data
+            this.refreshInOfficeToday();
 
-      // Update the count of days in office for "me"
-      this.dataservice.setMyDaysInOffice(
-        this.events.filter(event => event.title === 'me').length
-      );
+            // Update the count of days in office for "me"
+            this.dataservice.setMyDaysInOffice(
+              this.events.filter(event => event.title === 'me').length
+            );
 
-      // Get and update the user's days in the current period
-      this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe(
-        (days) => { this.myDays = days[0].count!; }
-      );
+            // Get and update the user's days in the current period
+            this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe(
+              (days) => { this.myDays = days[0].count!; }
+            );
 
-      // Update the events array immutably
-      this.events = [
-        ...(this.events),
-        newEvent
-      ];
-      this.calendarOptions.events = [
-        ...(this.calendarOptions.events as EventInput[]),
-        newEvent
-      ];
-    },
-    error => {
-      // Handle the error
-      // console.log(error.error.error); //to get msg as string
-    }
-  );
-    }
+            // Update the events array immutably
+            this.events = [
+              ...(this.events),
+              newEvent
+            ];
+            this.calendarOptions.events = [
+              ...(this.calendarOptions.events as EventInput[]),
+              newEvent
+            ];
+          },
+          error => {
+            // Handle the error
+            // console.log(error.error.error); //to get msg as string
+          }
+        );
+    }//error messahe here that the date has been booked already
 
   
 }
