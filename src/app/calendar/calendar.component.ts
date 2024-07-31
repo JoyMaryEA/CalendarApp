@@ -36,6 +36,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   thisYear = new Date().getFullYear()
   thisMonth = this.today.toLocaleString('default', { month: 'long' });
   myDays!:number
+  errorMsg:string | null =null
 
   constructor(private userInfoService: UserInfoService, private dataservice:DataServiceService) { }
 
@@ -122,8 +123,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getColorOfEvent(end:string,name:string){
-    if (new Date(end)<this.today){
-      return 'a6a6a6' //gray to mean you cannot edit it
+    if (new Date(end)<this.today && name=='meeee'){
+      return 'a5a5a5' //gray to mean you cannot edit it
     }
     return this.userInfoService.intToRGB(this.userInfoService.hashCode( name))
   }
@@ -227,6 +228,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
         // Subscribe to addUserOfficeDays
         this.addUser$ = this.userInfoService.addUserOfficeDays(officeDays).subscribe(
           response => {
+            //console.log(response);
+            
             // Set the newEvent ID from the server response
             newEvent.id = response.newDays!.period_id;
 
@@ -258,7 +261,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
             // console.log(error.error.error); //to get msg as string
           }
         );
-    }//error messahe here that the date has been booked already
+    }//error message here that the date has been booked already
 
   
 }
@@ -270,7 +273,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
       const start = new Date(info.event.start);
       var nowDate = new Date()
       if (start< nowDate){
-        alert("Deleting dates that have passed is not allowed") 
+        this.errorMsg= "Deleting past dates is not allowed"
+        setTimeout(() => {
+          this.errorMsg=null
+        }, 2000);
       }else{
         this.deleteUser$ =this.userInfoService.deleteOfficeDays(info.event.id).subscribe(
           (data)=>{
@@ -295,8 +301,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
         )
       }
       
-    }else{
-     // alert('not me')
     }
   }
 
