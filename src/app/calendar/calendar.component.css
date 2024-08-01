@@ -19,7 +19,7 @@
   .fc-view-harness, .fc-view-harness-active{ 
       min-height: 500px;
   }
- .fc-scrollgrid-sync-table, .fc-daygrid-body ,.fc-daygrid-body-unbalanced, .fc-daygrid-body-natural ,fc-daygrid-body fc-daygrid-body-unbalanced fc-daygrid-body-natural{
+ .fc-scrollgrid-sync-table, .fc-daygrid-body ,.fc-daygrid-body-unbalanced, .fc-daygrid-body-natural ,.fc-daygrid-body ,.fc-daygrid-body-unbalanced ,.fc-daygrid-body-natural{
   width: 100%;
  }
   #calendarviewonly .fc-view-harness fc-view-harness-active{
@@ -54,6 +54,12 @@
     border-radius: 2%;
     width: 30%;
     background-color: var(--main-error);
+}
+.fc .fc-daygrid-day-frame {
+  min-width: 120px; /* Adjust this value based on your design */
+}
+.fc-col-header{
+  width:100%
 }
 @keyframes slideUp {
   from {

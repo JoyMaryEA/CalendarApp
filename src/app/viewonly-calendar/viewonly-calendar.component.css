@@ -7,7 +7,12 @@
   #calendarviewonly .fc-view-harness fc-view-harness-active{
     height: 50%;
   }
-
+  .fc .fc-daygrid-day-frame {
+    min-width: 120px; /* Adjust this value based on your design */
+}
+.fc-col-header, .fc-daygrid-body .fc-daygrid-body-unbalanced .fc-daygrid-body-natural {
+  width:100%
+}
 @media (max-width: 680px) {
   
   .calendar-viewonly{

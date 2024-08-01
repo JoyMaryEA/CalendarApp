@@ -10,5 +10,12 @@
     --main-error:rgb(254, 106, 106);
     --main-success:rgb(138, 247, 138);
   }
+  .fc-col-header, .fc-daygrid-body ,.fc-scrollgrid-sync-table {
+    width:100% !important;
+  }
+
+.fc-daygrid-body table {
+    width: 100%; /* Make sure the table width is set */
+}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
