@@ -115,10 +115,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
     var nowDate = new Date()
    if (start<= nowDate) return false;
-    //TODO:error message saying this date has passed selecting chances
-   
-  
-    return true
+     return true
     //return start >= this.getDateWithoutTime(new Date());
   }
 
@@ -200,12 +197,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
     
           if (event.title === 'me' && ((new Date(info.startStr) >= eventStart && new Date(info.startStr) < eventEnd) || (new Date(info.endStr) > eventStart && new Date(info.endStr) <= eventEnd) || (new Date(info.startStr) < eventStart && new Date(info.endStr) > eventEnd))) {
               // TODO: error message saying "You already have an event on this date"
-              return false;
-          }else return true
+              return true;
+          }
       }
-      return true
+      return false
   }
-
+//adds dates
   onModalButtonClick(){
     var info = this.datesSelected;
     this.showModal = false; 
@@ -224,7 +221,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     };
 
    
-    if(this.isDateAlreadyBooked(info)){
+    if(!this.isDateAlreadyBooked(info)){
         // Subscribe to addUserOfficeDays
         this.addUser$ = this.userInfoService.addUserOfficeDays(officeDays).subscribe(
           response => {
@@ -261,7 +258,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
             // console.log(error.error.error); //to get msg as string
           }
         );
-    }//error message here that the date has been booked already
+    }else{
+      this.errorMsg="You have already booked this date"
+      setTimeout(() => {
+        this.errorMsg=null
+      }, 2000);
+    }
 
   
 }
@@ -270,7 +272,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   deleteEvent(info:any){
     if(info.event.title ==='me'){ 
      // console.log(info.event.id);
-      const start = new Date(info.event.start);
+      const start = new Date(info.event.end); 
       var nowDate = new Date()
       if (start< nowDate){
         this.errorMsg= "Deleting past dates is not allowed"
@@ -292,7 +294,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
                  this.calendarOptions.events = [...this.events];       
                  this.updateCalendarEvents(this.selectedUsers, this.events)     
                  this.userInfoService.getUserDaysInPeriod(this.getFirstAndLastDayOfMonth()).subscribe((days) => {this.myDays =  days[0].count!; });
-                 
+                  // Refresh the in-office today data
+                 this.refreshInOfficeToday();
                }
             }
         
