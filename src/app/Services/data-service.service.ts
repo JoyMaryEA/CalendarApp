@@ -59,7 +59,7 @@ export class DataServiceService {
   }
   addUser(user: selectedUserInputField): void {
     const currentUsers = this.selectedUsersSubject.getValue();
-     this.selectedUsersSubject.next(currentUsers); //TODO:figure out when this changes
+     this.selectedUsersSubject.next(currentUsers); 
   }
 
   removeUser(u_id: string): void {

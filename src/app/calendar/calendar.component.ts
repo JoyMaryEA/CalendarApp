@@ -133,7 +133,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.confirmModalData={numberOfDatesSelected,dateSelected:info.startStr}
     this.openModal()
     this.datesSelected=info
-    //BUG Big bug:don't allow if event already esists in the same day
   }
 
   refreshInOfficeToday() {
@@ -196,7 +195,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           const eventEnd = new Date(event.end as string|| event.start as string); // Handle events with no end date
     
           if (event.title === 'me' && ((new Date(info.startStr) >= eventStart && new Date(info.startStr) < eventEnd) || (new Date(info.endStr) > eventStart && new Date(info.endStr) <= eventEnd) || (new Date(info.startStr) < eventStart && new Date(info.endStr) > eventEnd))) {
-              // TODO: error message saying "You already have an event on this date"
+          
               return true;
           }
       }
