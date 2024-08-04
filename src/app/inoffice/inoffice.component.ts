@@ -18,7 +18,7 @@ export class InofficeComponent implements OnInit, OnDestroy{
   constructor(private router:Router,private userInfoService: UserInfoService,private dataService: DataServiceService){}
   currentPun!: string;
   currentDate!: string;
-  totalSeats: number = 14;
+  totalSeats: number = 13;
   data: any;
   private refreshSubscription!: Subscription;
   puns: string[] = [
