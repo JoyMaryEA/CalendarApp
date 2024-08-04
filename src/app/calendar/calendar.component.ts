@@ -189,17 +189,33 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   isDateAlreadyBooked(info:any){
-         // Check if there is an existing event with the title "me"
-         for (let event of this.events) {
-          const eventStart = new Date(event.start as string);
-          const eventEnd = new Date(event.end as string|| event.start as string); // Handle events with no end date
-    
-          if (event.title === 'me' && ((new Date(info.startStr) >= eventStart && new Date(info.startStr) < eventEnd) || (new Date(info.endStr) > eventStart && new Date(info.endStr) <= eventEnd) || (new Date(info.startStr) < eventStart && new Date(info.endStr) > eventEnd))) {
-          
-              return true;
-          }
-      }
-      return false
+    const newEventStart = new Date(info.startStr);
+    newEventStart.setDate(newEventStart.getDate() - 1);
+
+    const newEventEnd = new Date(info.endStr);
+    newEventEnd.setDate(newEventEnd.getDate() - 1);
+
+    // Iterate over the existing events
+    for (let event of this.events) {
+        const eventStart = new Date(event.start as string);
+        const eventEnd = new Date(event.end as string || event.start as string); // Handle events with no end date
+
+        // Adjust the logic to account for the one-day shift
+        const adjustedEventEnd = new Date(eventEnd);
+        adjustedEventEnd.setDate(adjustedEventEnd.getDate() - 1);
+
+        // Check if the title is "me"
+        if (event.title === 'me') {
+            // Adjusted overlap logic
+            const isOverlap = !(newEventEnd < eventStart || newEventStart > adjustedEventEnd);
+
+            if (isOverlap) {
+                return true;
+            }
+        }
+    }
+
+    return false;
   }
 //adds dates
   onModalButtonClick(){
