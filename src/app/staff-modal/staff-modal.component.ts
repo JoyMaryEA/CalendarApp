@@ -109,7 +109,8 @@ export class StaffModalComponent implements OnInit {
   }
 
   onSubmit() {
-    this.details = this.getDetailsByMonthYear(this.selectedMonth, this.selectedYear);
+    this.details = this.getDetailsByMonthYear(this.getMonthName(this.selectedMonth), this.selectedYear);
+    this.currentMonthLabel=this.getMonthName(this.selectedMonth)+ " " + this.selectedYear
   }
 
   getDetailsByMonthYear(month: string, year: number): { username: string, days: number, u_id: string, status: string }[] {

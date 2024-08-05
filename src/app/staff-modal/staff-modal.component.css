@@ -100,7 +100,9 @@ button {
   padding-bottom: 2rem;
   border-bottom: 2px solid #888;
 }
-
+/* .selection-mechanism{
+  display: flex;
+} */
 .currentMonthLabel{
   font-size: 23px;
 }
@@ -121,11 +123,10 @@ select{
 
 form{
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: .2rem;
   padding: .2rem 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--main-navy-blue);
-  width: 80%;
+  width: 40%;
 }
 
 .title{
