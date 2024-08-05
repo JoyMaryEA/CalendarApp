@@ -72,7 +72,7 @@ export class ViewonlyCalendarComponent implements OnInit, OnChanges {
       //   alert(modalContent);
       // },
       dayMaxEvents:1,
-      
+      fixedWeekCount:false
     };
   }
 

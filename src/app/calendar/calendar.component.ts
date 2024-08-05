@@ -83,6 +83,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       contentHeight: 'auto', 
       dayMaxEvents:1,
       select: this.handleDateSelect.bind(this),
+      fixedWeekCount:false,
       events: [
         { title: 'Event 1', start: '2024-07-04' },
       ],
