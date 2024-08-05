@@ -7,7 +7,7 @@
           <div class="progress-bar" [style.width]="(progress$ | async) + '%'"></div>
         </div>
         <p>
-          <span>{{ (noMaximumBooked$ | async)!  - (noBookedThisDate$ | async)! }}</span>
+          <span>{{ (noMaximumBooked$ | async)!  - (noBookedThisDate$ | async)! >0?(noMaximumBooked$ | async)!  - (noBookedThisDate$ | async)!:0}}</span>
           seats available
         </p>
       </div>
